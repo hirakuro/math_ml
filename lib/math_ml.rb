@@ -945,7 +945,7 @@ EOS
 				add_multi_command(:hat_etc, 'hat', 'breve', 'grave', 'acute', 'dot', 'ddot', 'tilde', 'bar', 'vec', 'check', 'widehat', 'overline', 'widetilde', 'overbrace')
 				add_multi_command(:underbrace_etc, 'underbrace', 'underline')
 				add_multi_command(:quad_etc, "quad", "qquad", ",", ":", ";")
-				add_multi_command(:it_etc, "it", "rm", "bf", "bm")
+				add_multi_command(:it_etc, "it", "rm", "bf")
 				add_multi_command(:mathit_etc, "mathit", "mathrm", "mathbf", "bm", "mathbb", "mathscr", "mathfrak")
 				add_sym_cmd(SymbolCommands)
 				add_delimiter(Delimiters)
@@ -1006,8 +1006,6 @@ EOS
 					@font = Font::ROMAN
 				when 'bf'
 					@font = Font::BOLD
-				when 'bm'
-					@font = Font::BOLD_ITALIC
 				end
 				nil
 			end

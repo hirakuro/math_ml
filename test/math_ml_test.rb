@@ -517,6 +517,8 @@ class TC_MathML_LaTeX_Parser < Test::Unit::TestCase
 		assert_equal("<mi>a</mi><mrow><mrow><mi>&bopf;</mi><mi>&copf;</mi></mrow></mrow><mi>d</mi>", smml('a \mathbb{b c} d'))
 		assert_equal("<mi>a</mi><mrow><mrow><mi>&bscr;</mi><mi>&cscr;</mi></mrow></mrow><mi>d</mi>", smml('a \mathscr{b c} d'))
 		assert_equal("<mi>a</mi><mrow><mrow><mi>&bfr;</mi><mi>&cfr;</mi></mrow></mrow><mi>d</mi>", smml('a \mathfrak{b c} d'))
+		assert_equal("<mi>a</mi><mrow><mrow><mi mathvariant='bold-italic'>b</mi><mi mathvariant='bold-italic'>c</mi></mrow></mrow><mi>d</mi>", smml('a \bm{bc}d'))
+		assert_equal("<mrow><mi mathvariant='bold-italic'>a</mi></mrow><mi>b</mi>", smml('\bm ab'))
 		e = assert_raises(ParseError){smml('\mathit')}
 		assert_equal(["Syntax error.", '\mathit', ""], parse_error(e))
 		e = assert_raises(ParseError){smml('\mathrm')}

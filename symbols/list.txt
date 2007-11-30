@@ -1,0 +1,518 @@
+# Line which begin with '#' is comment
+# "LaTeX command" "subsup|underover" "data"
+# 1st chararacter of 3rd column(data) is type of element
+#  o:operator i:identifier I:identifier(Italic) n:number v:nothing to do(not <none> element)
+# 2nd character is class of data
+#  '-' is string, ':' is entity(name), '=' is entity(code)
+# remain string is text or entity
+#   when it omitted, that is same to command without '\'
+# when all omitted, default is "o:"
+\{ subsup o-
+\} subsup o-
+\# subsup o-
+\$ subsup o-
+\& subsup o:amp
+\_ subsup o-
+\% subsup o-
+\, subsup v # dummy
+\varepsilon subsup I:
+\mathdollar subsup o-$
+\lbrace subsup 
+\rbrace subsup 
+\P subsup o:para
+\mathparagraph subsup o:para
+\S subsup o:sect
+\mathsection subsup o:sect
+\dag subsup o:dagger
+\dagger subsup 
+\ddag subsup o:ddagger
+\ddagger subsup 
+\copyright subsup o:copy
+\pounds subsup o:pound
+\mathsterling subsup o:pound
+\dots subsup o:mldr
+\mathellipsis subsup o:mldr
+\ldots subsup o:mldr
+\ensuremath subsup v # dummy
+\| subsup o:DoubleVerticalBar
+\mho subsup 
+\Join subsup o:bowtie
+\Box subsup o:square
+\Diamond subsup 
+\leadsto subsup o:zigrarr
+\sqsubset subsup 
+\sqsupset subsup 
+\lhd subsup o:vltri
+\unlhd subsup o:ltrie
+\rhd subsup o:vrtri
+\unrhd subsup o:rtrie
+\log subsup i-
+\lg subsup i-
+\ln subsup i-
+\lim underover i-
+\limsup underover i-lim sup
+\liminf underover i-lim inf
+\sin subsup i-
+\arcsin subsup i-
+\sinh subsup i-
+\cos subsup i-
+\arccos subsup i-
+\cosh subsup i-
+\tan subsup i-
+\arctan subsup i-
+\tanh subsup i-
+\cot subsup i-
+\coth subsup i-
+\sec subsup i-
+\csc subsup i-
+\max underover i-
+\min underover i-
+\sup underover i-
+\inf underover i-
+\arg subsup i-
+\ker subsup i-
+\dim subsup i-
+\hom subsup i-
+\det underover i-
+\exp subsup i-
+\Pr underover i-
+\gcd underover i-
+\deg subsup i-
+\prime subsup 
+\alpha subsup I:
+\beta subsup I:
+\gamma subsup I:
+\delta subsup I:
+\epsilon subsup I:
+\zeta subsup I:
+\eta subsup I:
+\theta subsup I:
+\iota subsup I:
+\kappa subsup I:
+\lambda subsup I:
+\mu subsup I:
+\nu subsup I:
+\xi subsup I:
+\pi subsup I:
+\rho subsup I:
+\sigma subsup I:
+\tau subsup I:
+\upsilon subsup I:
+\phi subsup I:
+\chi subsup I:
+\psi subsup I:
+\omega subsup I:
+\vartheta subsup I:
+\varpi subsup I:
+\varrho subsup I:
+\varsigma subsup I:
+\varphi subsup I:
+\Gamma subsup i:
+\Delta subsup i:
+\Theta subsup i:
+\Lambda subsup i:
+\Xi subsup i:
+\Pi subsup i:
+\Sigma subsup i:
+\Upsilon subsup i:Upsi
+\Phi subsup i:
+\Psi subsup i:
+\Omega subsup i:
+\aleph subsup i:
+\hbar subsup i:hslash # alternative
+\imath subsup i:
+\jmath subsup i:
+\ell subsup 
+\wp subsup 
+\Re subsup i:
+\Im subsup i:
+\partial subsup o:part
+\infty subsup n:infin
+\emptyset subsup i:empty
+\nabla subsup i:
+\surd subsup o:Sqrt
+\top subsup 
+\bot subsup 
+\angle subsup 
+\not subsup 
+\triangle subsup 
+\forall subsup 
+\exists subsup o:exist
+\neg subsup o:not
+\lnot subsup o:not
+\flat subsup 
+\natural subsup 
+\sharp subsup 
+\clubsuit subsup 
+\diamondsuit subsup 
+\heartsuit subsup 
+\spadesuit subsup 
+\coprod underover 
+\bigvee underover 
+\bigwedge underover 
+\biguplus underover 
+\bigcap underover 
+\bigcup underover 
+\intop underover o:int
+\int subsup o:
+\prod underover 
+\sum underover 
+\bigotimes underover 
+\bigoplus underover 
+\bigodot underover 
+\ointop underover o:oint
+\oint subsup 
+\bigsqcup underover 
+\smallint underover o:int
+\triangleleft subsup 
+\triangleright subsup 
+\bigtriangleup subsup 
+\bigtriangledown subsup 
+\wedge subsup 
+\land subsup o:wedge
+\vee subsup 
+\lor subsup o:vee
+\cap subsup 
+\cup subsup 
+\sqcap subsup 
+\sqcup subsup 
+\uplus subsup 
+\amalg subsup 
+\diamond subsup 
+\bullet subsup 
+\wr subsup 
+\div subsup 
+\odot subsup 
+\oslash subsup 
+\otimes subsup 
+\ominus subsup 
+\oplus subsup 
+\mp subsup 
+\pm subsup 
+\circ subsup o:cir
+\bigcirc subsup 
+\setminus subsup 
+\cdot subsup o:sdot
+\ast subsup 
+\times subsup 
+\star subsup 
+\propto subsup 
+\sqsubseteq subsup 
+\sqsupseteq subsup 
+\parallel subsup 
+\mid subsup 
+\dashv subsup 
+\vdash subsup 
+\nearrow subsup 
+\searrow subsup 
+\nwarrow subsup 
+\swarrow subsup 
+\Leftrightarrow subsup 
+\Leftarrow subsup 
+\Rightarrow subsup 
+\neq subsup o:ne
+\ne subsup 
+\leq subsup 
+\le subsup 
+\geq subsup 
+\ge subsup 
+\succ subsup 
+\prec subsup 
+\approx subsup 
+\succeq subsup o:sccue
+\preceq subsup o:prcue
+\supset subsup 
+\subset subsup 
+\supseteq subsup 
+\subseteq subsup 
+\in subsup 
+\ni subsup 
+\owns subsup o:ni
+\gg subsup 
+\ll subsup 
+\leftrightarrow subsup 
+\leftarrow subsup 
+\gets subsup o:leftarrow
+\rightarrow subsup 
+\to subsup o:rightarrow
+\mapstochar subsup o:vdash #alternative
+\mapsto subsup 
+\sim subsup 
+\simeq subsup 
+\perp subsup 
+\equiv subsup 
+\asymp subsup 
+\smile subsup 
+\frown subsup 
+\leftharpoonup subsup 
+\leftharpoondown subsup 
+\rightharpoonup subsup 
+\rightharpoondown subsup 
+\cong subsup 
+\notin subsup 
+\rightleftharpoons subsup 
+\doteq subsup 
+\joinrel subsup v # dummy
+\relbar subsup o--
+\Relbar subsup o-=
+\lhook subsup o:sub
+\hookrightarrow subsup 
+\rhook subsup o:sup
+\hookleftarrow subsup 
+\bowtie subsup 
+\models subsup 
+\Longrightarrow subsup 
+\longrightarrow subsup 
+\longleftarrow subsup 
+\Longleftarrow subsup 
+\longmapsto subsup o:mapsto
+\longleftrightarrow subsup 
+\Longleftrightarrow subsup 
+\iff subsup 
+\ldotp subsup o-.
+\cdotp subsup o:cdot
+\colon subsup 
+\cdots subsup o:ctdot
+\vdots subsup o:vellip
+\ddots subsup o:dtdot
+\braceld subsup o=x25dc # alternative
+\bracerd subsup o=x25dd # alternative
+\bracelu subsup o=x25df # alternative
+\braceru subsup o=x25de # alternative
+\lmoustache subsup 
+\rmoustache subsup 
+\arrowvert subsup o:vert
+\Arrowvert subsup o:DoubleVerticalBar
+\Vert subsup o:DoubleVerticalBar
+\vert subsup 
+\uparrow subsup 
+\downarrow subsup 
+\updownarrow subsup 
+\Uparrow subsup 
+\Downarrow subsup 
+\Updownarrow subsup 
+\backslash subsup o-\
+\rangle subsup 
+\langle subsup 
+\rceil subsup 
+\lceil subsup 
+\rfloor subsup 
+\lfloor subsup 
+\lgroup subsup o=x2570
+\rgroup subsup o=x256f
+\bracevert subsup o:vert
+\mathunderscore subsup o-_
+\square subsup 
+\rightsquigarrow subsup 
+\lozenge subsup 
+\vartriangleright subsup 
+\vartriangleleft subsup 
+\trianglerighteq subsup 
+\trianglelefteq subsup 
+\boxdot subsup o:dotsquare
+\boxplus subsup 
+\boxtimes subsup 
+\blacksquare subsup 
+\centerdot subsup 
+\blacklozenge subsup 
+\circlearrowright subsup 
+\circlearrowleft subsup 
+\leftrightharpoons subsup 
+\boxminus subsup 
+\Vdash subsup 
+\Vvdash subsup 
+\vDash subsup 
+\twoheadrightarrow subsup 
+\twoheadleftarrow subsup 
+\leftleftarrows subsup 
+\rightrightarrows subsup 
+\upuparrows subsup 
+\downdownarrows subsup 
+\upharpoonright subsup 
+\restriction subsup o:upharpoonright
+\downharpoonright subsup 
+\upharpoonleft subsup 
+\downharpoonleft subsup 
+\rightarrowtail subsup 
+\leftarrowtail subsup 
+\leftrightarrows subsup 
+\rightleftarrows subsup 
+\Lsh subsup 
+\Rsh subsup 
+\leftrightsquigarrow subsup 
+\looparrowleft subsup 
+\looparrowright subsup 
+\circeq subsup 
+\succsim subsup 
+\gtrsim subsup 
+\gtrapprox subsup 
+\multimap subsup 
+\therefore subsup 
+\because subsup 
+\doteqdot subsup 
+\Doteq subsup o:doteqdot
+\triangleq subsup 
+\precsim subsup 
+\lesssim subsup 
+\lessapprox subsup 
+\eqslantless subsup 
+\eqslantgtr subsup 
+\curlyeqprec subsup 
+\curlyeqsucc subsup 
+\preccurlyeq subsup 
+\leqq subsup 
+\leqslant subsup o:leq # alternative
+\lessgtr subsup 
+\backprime subsup 
+\risingdotseq subsup 
+\fallingdotseq subsup 
+\succcurlyeq subsup 
+\geqq subsup 
+\geqslant subsup o:geq # alternative
+\gtrless subsup 
+\bigstar subsup 
+\between subsup 
+\blacktriangledown subsup 
+\blacktriangleright subsup 
+\blacktriangleleft subsup 
+\vartriangle subsup o:triangle
+\blacktriangle subsup 
+\triangledown subsup 
+\eqcirc subsup 
+\lesseqgtr subsup 
+\gtreqless subsup 
+\lesseqqgtr subsup 
+\gtreqqless subsup 
+\Rrightarrow subsup 
+\Lleftarrow subsup 
+\veebar subsup 
+\barwedge subsup 
+\doublebarwedge subsup 
+\measuredangle subsup 
+\sphericalangle subsup o:angsph
+\varpropto subsup 
+\smallsmile subsup o:smile
+\smallfrown subsup o:frown
+\Subset subsup 
+\Supset subsup 
+\Cup subsup 
+\doublecup subsup o:Cup
+\Cap subsup 
+\doublecap subsup o:Cap
+\curlywedge subsup 
+\curlyvee subsup 
+\leftthreetimes subsup 
+\rightthreetimes subsup 
+\subseteqq subsup 
+\supseteqq subsup 
+\bumpeq subsup 
+\Bumpeq subsup 
+\lll subsup o:Ll
+\llless subsup o:Ll
+\ggg subsup 
+\gggtr subsup o:ggg
+\circledS subsup 
+\pitchfork subsup 
+\dotplus subsup 
+\backsim subsup 
+\backsimeq subsup 
+\complement subsup 
+\intercal subsup 
+\circledcirc subsup 
+\circledast subsup 
+\circleddash subsup 
+\lvertneqq subsup o:lneqq
+\gvertneqq subsup o:gneqq
+\nleq subsup o=x2270
+\ngeq subsup o=x2271
+\nless subsup 
+\ngtr subsup 
+\nprec subsup 
+\nsucc subsup 
+\lneqq subsup 
+\gneqq subsup 
+\nleqslant subsup 
+\ngeqslant subsup 
+\lneq subsup 
+\gneq subsup 
+\npreceq subsup o:nprcue
+\nsucceq subsup o:nsccue
+\precnsim subsup 
+\succnsim subsup 
+\lnsim subsup 
+\gnsim subsup 
+\nleqq subsup 
+\ngeqq subsup 
+\precneqq subsup o-<mfrac linethickness='0' mathsize='1%'><mo>&prec;</mo><mo>&ne;</mo></mfrac>	 # alternative
+\succneqq subsup o-<mfrac linethickness='0' mathsize='1%'><mo>&succ;</mo><mo>&ne;</mo></mfrac>	 # alternative
+\precnapprox subsup 
+\succnapprox subsup 
+\lnapprox subsup o-<mfrac linethickness='0' mathsize='1%'><mo>&lt;</mo><mo>&nap;</mo></mfrac>	 # alternative
+\gnapprox subsup o-<mfrac linethickness='0' mathsize='1%'><mo>&gt;</mo><mo>&nap;</mo></mfrac>	 # alternative
+\nsim subsup 
+\ncong subsup 
+\diagup subsup o=x2571
+\diagdown subsup o=x2572
+\varsubsetneq subsup o:subsetneq
+\varsupsetneq subsup o:supsetneq
+\nsubseteqq subsup 
+\nsupseteqq subsup 
+\subsetneqq subsup 
+\supsetneqq subsup 
+\varsubsetneqq subsup o:subsetneqq # alternative
+\varsupsetneqq subsup o:supsetneqq # alternative
+\subsetneq subsup 
+\supsetneq subsup 
+\nsubseteq subsup 
+\nsupseteq subsup 
+\nparallel subsup 
+\nmid subsup 
+\nshortmid subsup o:nmid # alternative
+\nshortparallel subsup o:nparallel # alternative
+\nvdash subsup 
+\nVdash subsup 
+\nvDash subsup 
+\nVDash subsup 
+\ntrianglerighteq subsup 
+\ntrianglelefteq subsup 
+\ntriangleleft subsup 
+\ntriangleright subsup 
+\nleftarrow subsup 
+\nrightarrow subsup 
+\nLeftarrow subsup 
+\nRightarrow subsup 
+\nLeftrightarrow subsup 
+\nleftrightarrow subsup 
+\divideontimes subsup 
+\varnothing subsup 
+\nexists subsup 
+\Finv subsup o=x2132
+\Game subsup o-G # alternative
+\eth subsup 
+\eqsim subsup 
+\beth subsup 
+\gimel subsup 
+\daleth subsup 
+\lessdot subsup 
+\gtrdot subsup 
+\ltimes subsup 
+\rtimes subsup 
+\shortmid subsup o:mid # alternative
+\shortparallel subsup 
+\smallsetminus subsup o:setminus # alternative
+\thicksim subsup o:sim # alternative
+\thickapprox subsup o:approx # alternative
+\approxeq subsup 
+\succapprox subsup 
+\precapprox subsup 
+\curvearrowleft subsup 
+\curvearrowright subsup 
+\digamma subsup 
+\varkappa subsup 
+\Bbbk subsup i:kopf
+\hslash subsup 
+\backepsilon subsup 
+\ulcorner subsup o:boxdr # alternative
+\urcorner subsup o:boxdl # alternative
+\llcorner subsup o:boxur # alternative
+\lrcorner subsup o:boxul # alternative

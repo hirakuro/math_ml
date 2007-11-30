@@ -1,0 +1,49 @@
+= MathML Library
+:lang:ja
+本ライブラリは、LaTeXの記法にしたがって記述された数式をMathMLに変換する処理を提供します。
+
+例えば MathML::String による Stringクラスの拡張を使えば、次のようにして変換処理を呼び出すことが出来ます。
+
+:lang:en
+This library provide converter from LaTeX mathematical expressions to MathML.
+
+For example, using extension of String class by MathML::String, you can use converter like bellow.
+
+:lang:
+ #!/usr/bin/ruby
+ # require "rubygems"
+ require "math_ml/string"
+ puts 'x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}'.to_mathml
+
+:lang:ja
+このスクリプトの出力は次のようになります。
+
+:lang:en
+Output of this script is bellow.
+
+:lang:
+ <math xmlns='http://www.w3.org/1998/Math/MathML' display='inline'>
+  <mi>x</mi>
+  <mo>=</mo>
+  <mfrac>
+   <mrow>
+	<mo>-</mo>
+	<mi>b</mi>
+	<mo>&pm;</mo>
+	<msqrt><mrow>
+	 <msup>
+	  <mi>b</mi>
+	  <mn>2</mn>
+	 </msup>
+	 <mo>-</mo>
+	 <mn>4</mn>
+	 <mi>a</mi>
+	 <mi>c</mi>
+	</mrow></msqrt>
+   </mrow>
+   <mrow>
+	<mn>2</mn>
+	<mi>a</mi>
+   </mrow>
+  </mfrac>
+ </math>

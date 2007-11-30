@@ -42,6 +42,7 @@ module MathML
 	module Variant
 		NORMAL = "normal"
 		BOLD = "bold"
+		BOLD_ITALIC = "bold-italic"
 		def variant=(v)
 			self["mathvariant"] = v
 		end
@@ -285,6 +286,7 @@ module MathML
 			SCRIPT = 3
 			FRAKTUR = 4
 			ROMAN = 5
+			BOLD_ITALIC = 6
 		end
 
 		class BlockNotClosed < StandardError; end
@@ -768,6 +770,8 @@ EOS
 					i.extend(Variant).variant = Variant::NORMAL
 				when Font::BOLD
 					i.extend(Variant).variant = Variant::BOLD
+				when Font::BOLD_ITALIC
+					i.extend(Variant).variant = Variant::BOLD_ITALIC
 				when Font::BLACKBOLD
 					c = MathML.pcstring(%Q[&#{c}opf;], true)
 				when Font::SCRIPT
@@ -941,8 +945,8 @@ EOS
 				add_multi_command(:hat_etc, 'hat', 'breve', 'grave', 'acute', 'dot', 'ddot', 'tilde', 'bar', 'vec', 'check', 'widehat', 'overline', 'widetilde', 'overbrace')
 				add_multi_command(:underbrace_etc, 'underbrace', 'underline')
 				add_multi_command(:quad_etc, "quad", "qquad", ",", ":", ";")
-				add_multi_command(:it_etc, "it", "rm", "bf")
-				add_multi_command(:mathit_etc, "mathit", "mathrm", "mathbf", "mathbb", "mathscr", "mathfrak")
+				add_multi_command(:it_etc, "it", "rm", "bf", "bm")
+				add_multi_command(:mathit_etc, "mathit", "mathrm", "mathbf", "bm", "mathbb", "mathscr", "mathfrak")
 				add_sym_cmd(SymbolCommands)
 				add_delimiter(Delimiters)
 
@@ -1002,6 +1006,8 @@ EOS
 					@font = Font::ROMAN
 				when 'bf'
 					@font = Font::BOLD
+				when 'bm'
+					@font = Font::BOLD_ITALIC
 				end
 				nil
 			end
@@ -1014,6 +1020,8 @@ EOS
 					parse_mathfont(Font::ROMAN)
 				when 'mathbf'
 					parse_mathfont(Font::BOLD)
+				when 'bm'
+					parse_mathfont(Font::BOLD_ITALIC)
 				when 'mathbb'
 					parse_mathfont(Font::BLACKBOLD)
 				when 'mathscr'

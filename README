@@ -2,11 +2,20 @@
 :lang:ja
 本ライブラリは、LaTeXの記法にしたがって記述された数式をMathMLに変換する処理を提供します。
 
-例えば MathML::String による Stringクラスの拡張を使えば、次のようにして変換処理を呼び出すことが出来ます。
-
 :lang:en
 This library provide converter from LaTeX mathematical expressions to MathML.
 
+:lang:
+= URLs
+* Documents(Japanese)[http://mathml.rubyforge.org/ja/]
+* Documents(Englise)[http://mathml.rubyforge.org/en/]
+* MercurialRepository[https://hg.hinet.mydns.jp/math_ml/]
+
+= Example
+:lang:ja
+例えば MathML::String による Stringクラスの拡張を使えば、次のようにして変換処理を呼び出すことが出来ます。
+
+:lang:en
 For example, using extension of String class by MathML::String, you can use converter like bellow.
 
 :lang:

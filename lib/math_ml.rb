@@ -153,16 +153,9 @@ module MathML
 			update_name
 		end
 
-		if Module.constants.include?("REXML") && self < REXML::Element
-			def write(writer=$stdout, indent=-1, transitive=false, ie_hack=true)
-				update_contents
-				super
-			end
-		elsif Module.constants.include?("EimXML") && self < EimXML::Element
-			def write(dst=String.new, level=0, is_head=true)
-				update_contents
-				super
-			end
+		def write(dst=String.new, level=0, is_head=true)
+			update_contents
+			super
 		end
 	end
 

@@ -153,7 +153,7 @@ module MathML
 			update_name
 		end
 
-		def write(dst=String.new, level=0, is_head=true)
+		def to_xml(dst=String.new, level=0, is_head=true)
 			update_contents
 			super
 		end

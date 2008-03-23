@@ -80,7 +80,7 @@ def build_gem(unstable=false)
 	spec = Gem::Specification.new do |spec|
 		spec.name = "mathml"
 		spec.rubyforge_project = "mathml"
-		spec.version = "0.8.0"
+		spec.version = ENV["VER"] or raise "Need VER=x.y.z(.?)"
 		spec.summary = "MathML Library"
 		spec.author = "KURODA Hiraku"
 		spec.email = "hiraku@hinet.mydns.jp"

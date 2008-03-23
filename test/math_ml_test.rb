@@ -459,8 +459,22 @@ class TC_MathML_LaTeX_Parser < Test::Unit::TestCase
 
 	def test_operators
 		check_chr("<mo>", "</mo>", ",.+-*=/()[]|;:!")
-		check_entity("<mo>", "</mo>", {"<"=>"lt", ">"=>"gt", '"'=>"quot", "'"=>"apos"})
+		check_entity("<mo>", "</mo>", {"<"=>"lt", ">"=>"gt", '"'=>"quot"})
 		check_hash("<mo>", "</mo>", {'\backslash'=>'\\', '\%'=>'%', '\{'=>'{', '\}'=>'}', '\$'=>'$', '\#'=>'#'})
+	end
+
+	def test_prime
+		assert_equal("<msup><mi>a</mi><mo>&prime;</mo></msup>", smml("a'"))
+		assert_equal("<msup><mi>a</mi><mo>&prime;&prime;</mo></msup>", smml("a''"))
+		assert_equal("<msup><mi>a</mi><mo>&prime;&prime;&prime;</mo></msup>", smml("a'''"))
+		assert_equal("<msup><none /><mo>&prime;</mo></msup>", smml("'"))
+
+		e = assert_raises(ParseError){smml("a^b'")}
+		assert_equal(["Double superscript.", "a^b", "'"], parse_error(e))
+
+		assert_equal("<msup><mi>a</mi><mrow><mo>&prime;</mo><mi>b</mi></mrow></msup>", smml("a'^b"))
+		assert_equal("<msup><mi>a</mi><mrow><mo>&prime;&prime;&prime;</mo><mi>b</mi></mrow></msup>", smml("a'''^b"))
+		assert_equal("<msup><mi>a</mi><mo>&prime;</mo></msup><mi>b</mi>", smml("a'b"))
 	end
 
 	def test_sqrt

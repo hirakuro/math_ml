@@ -263,7 +263,7 @@ module MathML
 		module RE
 			SPACE = /(?:\s|%.*$)/
 			NUMERICS = /(?:\.\d+)|(?:\d+(\.\d+)?)/
-			OPERATORS = /[,\.\+\-\*=\/\(\)\[\]<>"'|;:!]/
+			OPERATORS = /[,\.\+\-\*=\/\(\)\[\]<>"|;:!]/
 			ALPHABETS = /[a-zA-Z]/
 			BLOCK = /\A\{(.*?)\}\z/m
 			OPTION = /\A\[(.*)\]\z/m
@@ -739,7 +739,7 @@ EOS
 						parse_block
 					when @scanner.scan(/_/)
 						parse_sub
-					when @scanner.scan(/\^/)
+					when @scanner.scan(/'+|\^/)
 						parse_sup
 					when @scanner.scan_command
 						parse_command
@@ -808,8 +808,27 @@ EOS
 				e = @container.pop
 				e = None.new unless e
 				e = SubSup.new(@ds && e.display_style, e) unless e.is_a?(SubSup)
-				raise ParseError.new("Double superscript.", "^") if e.sup
-				e.sup = parse_any("Superscript not exist.")
+				raise ParseError.new("Double superscript.", @scanner[0]) if e.sup
+				if /'+/=~@scanner[0]
+					prime = Operator.new
+					prime << MathML.pcstring('&prime;'*@scanner[0].size, true)
+					unless @scanner.scan(/\^/)
+						e.sup = prime
+						return e
+					end
+				end
+				sup = parse_any("Superscript not exist.")
+
+				if prime
+					unless sup.is_a?(Row)
+						r = Row.new
+						r << sup
+						sup = r
+					end
+					sup.contents.insert(0, prime)
+				end
+
+				e.sup = sup
 				e
 			end
 

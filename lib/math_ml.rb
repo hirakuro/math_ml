@@ -153,7 +153,7 @@ module MathML
 			update_name
 		end
 
-		def to_xml_with_indent(dst=String.new, level=0, is_head=true)
+		def to_xml(dst=String.new, nest_level=0)
 			update_contents
 			super
 		end

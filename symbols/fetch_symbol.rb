@@ -7,7 +7,7 @@ require "math_ml"
 include MathML::LaTeX
 
 BEC = /\\.|[^\\\n]/ # Back slash Escaped Character
-TEXMF_DIR = "/usr/share/texmf-tetex"
+TEXMF_DIR = "/usr/share/texmf-texlive"
 
 def brace_nest(s)
 	nest=0

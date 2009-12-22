@@ -306,17 +306,20 @@ module MathML
 				r
 			end
 
-			alias :_check :check
+			unless instance_methods.include?("_eos?")
+				alias :_eos? :eos?
+				alias :_check :check
+				alias :_scan :scan
+			end
+
 			def check(re)
 				skip_space_and(true){_check(re)}
 			end
 
-			alias :_scan :scan
 			def scan(re)
 				skip_space_and(false){_scan(re)}
 			end
 
-			alias :_eos? :eos?
 			def eos?
 				_eos? || _check(/#{RE::SPACE}+\z/)
 			end

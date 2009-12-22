@@ -2,3 +2,5 @@ syntax: glob
 html
 pkg
 eim_xml
+external
+coverage

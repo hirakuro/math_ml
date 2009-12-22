@@ -1,0 +1,14 @@
+utirake_url = "https://s.malagma.org/repos/User/hiraku/ruby/utirake"
+
+unless File.directory?("external/utirake")
+	Dir.mkdir("external") unless File.exist?("external")
+	Dir.chdir("external") do
+		if File.exist?("../../utirake")
+			ln_s "../../utirake", "./"
+		else
+			system("hg clone #{utirake_url}")
+		end
+	end
+end
+
+load "external/utirake/utirake.rb"

@@ -31,7 +31,7 @@ UtiRake.setup do
 	end
 
 	spec do |s|
-		s.spec_opts << "-b"
+#		s.spec_opts << "-b"
 	end
 	alias_task
 end

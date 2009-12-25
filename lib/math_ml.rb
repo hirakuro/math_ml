@@ -3,10 +3,6 @@
 # Copyright (C) 2005, KURODA Hiraku <hiraku@hinet.mydns.jp>
 # You can redistribute it and/or modify it under GPL2.
 
-unless __FILE__ == File.expand_path(__FILE__)
-require File.expand_path(File.dirname(__FILE__))+"/"+File.basename(__FILE__, ".rb")
-else
-
 require "strscan"
 module MathML
 	require "eim_xml"
@@ -29,5 +25,3 @@ end
 require "math_ml/element"
 require "math_ml/latex"
 require "math_ml/latex/builtin_commands"
-
-end

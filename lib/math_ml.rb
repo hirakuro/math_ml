@@ -17,8 +17,6 @@ module MathML
 		EimXML::PCString.new(s, encoded)
 	end
 
-	PCString = EimXML::PCString
-
 	class Error < StandardError; end
 end
 

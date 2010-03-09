@@ -6,11 +6,6 @@ module MathML
 			@display_style = true
 			self
 		end
-
-		def <<(s)
-			s = MathML.pcstring(s) if String===s
-			super(s)
-		end
 	end
 
 	module Variant

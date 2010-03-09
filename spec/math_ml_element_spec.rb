@@ -20,7 +20,13 @@ describe MathML::Element do
 		e.pop.should be_nil
 
 		e << "text"
-		e.pop.should == MathML.pcstring("text")
+		e.pop.should == "text"
 		e.pop.should be_nil
+	end
+
+	it "#to_s" do
+		e = MathML::Element.new("e")
+		e << "test<"
+		e.to_s.should == "<e>test&lt;</e>"
 	end
 end

@@ -88,8 +88,6 @@ module MathML
 			super("mrow")
 			as_display_style if display_style
 			@body = body
-
-			update_name
 		end
 
 		def update_name
@@ -112,19 +110,20 @@ module MathML
 		end
 		private :update_contents
 
+		def update
+			update_name
+			update_contents
+		end
+		private :update
+
 		def sub=(sub)
 			@sub = sub
-			update_name
+			update
 		end
 
 		def sup=(sup)
 			@sup = sup
-			update_name
-		end
-
-		def write_to(out="")
-			update_contents
-			super
+			update
 		end
 	end
 

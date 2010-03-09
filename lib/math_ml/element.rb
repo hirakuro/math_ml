@@ -102,7 +102,7 @@ module MathML
 			end
 			self.name = name
 		end
-		protected :update_name
+		private :update_name
 
 		def update_contents
 			contents.clear
@@ -110,7 +110,7 @@ module MathML
 			contents << @sub if @sub
 			contents << @sup if @sup
 		end
-		protected :update_contents
+		private :update_contents
 
 		def sub=(sub)
 			@sub = sub

@@ -163,7 +163,7 @@ end
 
 def load_preput_list(list)
 	r = {}
-	list.each do |l|
+	list.each_line do |l|
 		next if l=~/\A\s*\#/
 		com, type, str = l.chomp.split(nil, 3)
 		r[com] = [type.to_sym, str]
@@ -244,7 +244,7 @@ end
 def parse_list(list)
 	a = []
 	h = {}
-	list.each do |l|
+	list.each_line do |l|
 		next if l =~ /^\s*\#/
 			com, type, str = l.chomp.split(nil, 3)
 

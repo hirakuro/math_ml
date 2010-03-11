@@ -1,4 +1,5 @@
 require "math_ml/util"
+require "eim_xml/parser"
 
 describe MathML::Util do
 	include MathML::Util
@@ -94,6 +95,15 @@ describe MathML::Util::SimpleLaTeX do
 		r
 	end
 
+	def simplify_math(src)
+		attr = []
+		r = src.gsub(/<math(\s+[^>]+)>/) do |m|
+			attr << $1.scan(/\s+[^\s]+/).map{|i| i[/\A\s*(.*)/, 1]}.sort
+			"<math>"
+		end
+		attr.unshift(r)
+	end
+
 	def assert_data(src,
 			expected_math, expected_src,
 			expected_dmath, expected_dsrc,
@@ -116,7 +126,12 @@ describe MathML::Util::SimpleLaTeX do
 		data.escape_list.should == expected_escaped
 		data.esrc_list.should == expected_esrc
 		encoded.should == expected_encoded
-		simple_latex.decode(encoded, data).should == expected_decoded
+		target = simple_latex.decode(encoded, data)
+		simplify_math(target).should == simplify_math(expected_decoded)
+	end
+
+	it "(spec for helper)" do
+		simplify_math("<math c='d' a='b'>..</math><math g='h' e='f'></math>").should == ["<math>..</math><math></math>", %w[a='b' c='d'], %w[e='f' g='h']]
 	end
 
 	it "should parse math environment" do
@@ -242,7 +257,7 @@ describe MathML::Util::SimpleLaTeX do
 		data.dmath_list[0].attributes[:display].should == "block"
 		sma(data.math_list).should == ["<mi>a</mi>"]
 		sma(data.dmath_list).should == ["<mi>b</mi>"]
-		s.decode(encoded, data).should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math> <math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"
+		simplify_math(s.decode(encoded, data)).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math> <math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>")
 	end
 
 	it "#set_encode_proc" do
@@ -530,7 +545,7 @@ describe MathML::Util::SimpleLaTeX do
 	it "#decode_partial" do
 		s = MathML::Util::SimpleLaTeX.new
 		encoded, data = s.encode("$a$$b$")
-		s.decode_partial(:math, encoded, data).should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math><math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"
+		simplify_math(s.decode_partial(:math, encoded, data)).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math><math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>")
 
 		s.set_encode_proc(/\\</) do |scanner|
 			if scanner.scan(/\\<(.)(.*?)\1>/)
@@ -539,26 +554,26 @@ describe MathML::Util::SimpleLaTeX do
 		end
 		src='$a$$$b$$\c\<.$d$.>'
 		encoded, data = s.encode(src)
-		s.decode_partial(:math, encoded, data).should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>\001d0\001\001e0\001\001u0\001"
-		s.decode_partial(:dmath, encoded, data).should == "\001m0\001<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\001e0\001\001u0\001"
-		s.decode_partial(:escape, encoded, data).should == "\001m0\001\001d0\001c\001u0\001"
-		s.decode_partial(:user, encoded, data).should == "\001m0\001\001d0\001\001e0\001$d$"
+		simplify_math(s.decode_partial(:math, encoded, data)).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>\001d0\001\001e0\001\001u0\001")
+		simplify_math(s.decode_partial(:dmath, encoded, data)).should == simplify_math("\001m0\001<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\001e0\001\001u0\001")
+		simplify_math(s.decode_partial(:escape, encoded, data)).should == simplify_math("\001m0\001\001d0\001c\001u0\001")
+		simplify_math(s.decode_partial(:user, encoded, data)).should == simplify_math("\001m0\001\001d0\001\001e0\001$d$")
 
 		r = s.decode_partial(:math, encoded, data) do |item, opt|
 			opt[:type].should == :math
 			opt[:src].should == "$a$"
-			item.to_s.should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>"
+			simplify_math(item.to_s).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>")
 			item
 		end
-		r.should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>\001d0\001\001e0\001\001u0\001"
+		simplify_math(r).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>\001d0\001\001e0\001\001u0\001")
 
 		r = s.decode_partial(:dmath, encoded, data) do |item, opt|
 			opt[:type].should == :dmath
 			opt[:src].should == "$$b$$"
-			item.to_s.should == "<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"
+			simplify_math(item.to_s).should == simplify_math("<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>")
 			item
 		end
-		r.should == "\001m0\001<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\001e0\001\001u0\001"
+		simplify_math(r).should == simplify_math("\001m0\001<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\001e0\001\001u0\001")
 
 		r = s.decode_partial(:escape, encoded, data) do |item, opt|
 			opt[:type].should == :escape
@@ -618,7 +633,7 @@ EOT
 			end
 		end
 		encoded.should == "test\n\001u0\001\nend\n"
-		s.decode(encoded, data).gsub(/>\s*</, "><").should == "test\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mo>=</mo></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mo>=</mo></mtd><mtd><mi>d</mi></mtd></mtr></mtable></math>\nend\n"
+		simplify_math(s.decode(encoded, data)).should == simplify_math("test\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mo>=</mo></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mo>=</mo></mtd><mtd><mi>d</mi></mtd></mtr></mtable></math>\nend\n")
 
 		encoded, data = s.encode('\begin{eqnarray}a\end{eqnarray}', MathML::Util::EQNARRAY_RE) do |scanner|
 			s.parse_eqnarray(scanner[1]) if scanner.scan(MathML::Util::EQNARRAY_RE)
@@ -634,14 +649,14 @@ EOT
 			end
 		end
 		encoded.should == "\001u0\001\001e0\001\001e1\001\001e2\001\001e3\001\001e4\001\001e5\001\001u1\001"
-		s.decode(encoded, data).should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math>|&lt;&gt;&amp;&quot;&apos;test"
+		simplify_math(s.decode(encoded, data)).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math>|&lt;&gt;&amp;&quot;&apos;test")
 		encoded, data = s.encode('\alpha test', MathML::Util::SINGLE_COMMAND_RE) do |scanner|
 			if scanner.scan(MathML::Util::SINGLE_COMMAND_RE)
 				s.parse_single_command(scanner.matched)
 			end
 		end
 		encoded.should == "\001u0\001test"
-		s.decode(encoded, data).should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math>test"
+		simplify_math(s.decode(encoded, data)).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math>test")
 
 		encoded, data = s.encode('\alpha  test', MathML::Util::SINGLE_COMMAND_RE) do |scanner|
 			if scanner.scan(MathML::Util::SINGLE_COMMAND_RE)
@@ -649,7 +664,7 @@ EOT
 			end
 		end
 		encoded.should == "\001u0\001 test"
-		s.decode(encoded, data).should == "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math> test"
+		simplify_math(s.decode(encoded, data)).should == simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math> test")
 
 		encoded, data = s.encode("\\alpha\ntest", MathML::Util::SINGLE_COMMAND_RE) do |scanner|
 			if scanner.scan(MathML::Util::SINGLE_COMMAND_RE)

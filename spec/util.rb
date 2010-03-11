@@ -1,17 +1,3 @@
-class Symbol
-	def <=>(s)
-		self.to_s<=>s.to_s
-	end
-end
-
-class Hash
-	def each
-		keys.sort.each do |k|
-			yield(k, self[k])
-		end
-	end
-end
-
 module MathML
 	module Spec
 		module Util
@@ -29,13 +15,17 @@ module MathML
 				MathML::LaTeX::Parser.new
 			end
 
+			def math_ml(src, display_style=false, parser=nil)
+				parser ||= new_parser
+				parser.parse(src, display_style)
+			end
+
 			def strip_math_ml(math_ml)
-				math_ml.gsub(/>\s*/, ">").gsub(/\s*</, "<")[/\A<math [^>]*>(.*)<\/math>\Z/m, 1]
+				math_ml.to_s.gsub(/>\s*/, ">").gsub(/\s*</, "<")[/\A<math [^>]*>(.*)<\/math>\Z/m, 1]
 			end
 
 			def smml(src, display_style=false, parser=nil)
-				parser ||= new_parser
-				strip_math_ml(parser.parse(src, display_style).to_s)
+				strip_math_ml(math_ml(src, display_style, parser))
 			end
 		end
 	end

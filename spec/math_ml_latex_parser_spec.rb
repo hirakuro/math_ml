@@ -1,3 +1,5 @@
+require "eim_xml/parser"
+require "eim_xml/dsl"
 require "math_ml"
 require "spec/util"
 
@@ -199,11 +201,37 @@ describe MathML::LaTeX::Parser do
 
 			smml('\begin{array}{cc}&\end{array}').should == "<mtable><mtr><mtd /><mtd /></mtr></mtable>"
 
-			smml('\left\{\begin{array}ca_b\end{array}\right\}').should == "<mfenced close='}' open='{'><mrow><mtable><mtr><mtd><msub><mi>a</mi><mi>b</mi></msub></mtd></mtr></mtable></mrow></mfenced>"
+			math_ml('\left\{\begin{array}ca_b\end{array}\right\}')[0].should =~ EimXML::DSL.element(:mfenced, :open=>"{", :close=>"}"){
+				element :mrow do
+					element :mtable do
+						element :mtr do
+							element :mtd do
+								element :msub do
+									element(:mi).add("a")
+									element(:mi).add("b")
+								end
+							end
+						end
+					end
+				end
+			}
 
 			smml('\begin{array}{@{a_1}l@bc@cr@d}A&B&C\end{array}').should == "<mtable columnalign='center left center center center right center'><mtr><mtd><mrow><msub><mi>a</mi><mn>1</mn></msub></mrow></mtd><mtd><mi>A</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>B</mi></mtd><mtd><mi>c</mi></mtd><mtd><mi>C</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable>"
 
-			smml('\left\{\begin{array}ca_b\end{array}\right\}').should == "<mfenced close='}' open='{'><mrow><mtable><mtr><mtd><msub><mi>a</mi><mi>b</mi></msub></mtd></mtr></mtable></mrow></mfenced>"
+			math_ml('\left\{\begin{array}ca_b\end{array}\right\}')[0].should =~ EimXML::DSL.element(:mfenced, :open=>"{", :close=>"}"){
+				element :mrow do
+					element :mtable do
+						element :mtr do
+							element :mtd do
+								element :msub do
+									element(:mi).add("a")
+									element(:mi).add("b")
+								end
+							end
+						end
+					end
+				end
+			}
 
 			smml('\begin{array}{c|c}a&b\\\\c&d\end{array}').should == "<mtable columnlines='solid'><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable>"
 			smml('\begin{array}{|c|}a\\\\c\end{array}').should == "<mtable columnlines='solid solid'><mtr><mtd /><mtd><mi>a</mi></mtd><mtd /></mtr><mtr><mtd /><mtd><mi>c</mi></mtd><mtd /></mtr></mtable>"
@@ -213,20 +241,70 @@ describe MathML::LaTeX::Parser do
 		end
 
 		it "should parse \\left and \\right" do
-			smml('\left(\frac12\right)').should == "<mfenced close=')' open='('><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></mfenced>"
+			math_ml('\left(\frac12\right)')[0].should =~ EimXML::DSL.element(:mfenced, :open=>"(", :close=>")"){
+				element :mrow do
+					element :mfrac do
+						element(:mn).add("1")
+						element(:mn).add("2")
+					end
+				end
+			}
 
-			smml('\left \lfloor a\right \rfloor').should == "<mfenced close='&rfloor;' open='&lfloor;'><mrow><mi>a</mi></mrow></mfenced>"
+			math_ml('\left \lfloor a\right \rfloor')[0].should =~ EimXML::DSL.element(:mfenced, :open=>EimXML::PCString.new("&lfloor;", true), :close=>EimXML::PCString.new("&rfloor;", true)){
+				element :mrow do
+					element(:mi).add("a")
+				end
+			}
 
-			smml('\left \{ a \right \}').should == "<mfenced close='}' open='{'><mrow><mi>a</mi></mrow></mfenced>"
+			math_ml('\left \{ a \right \}')[0].should =~ EimXML::DSL.element(:mfenced, :open=>"{", :close=>"}"){
+				element :mrow do
+					element(:mi).add("a")
+				end
+			}
 
-			smml('\left\{\begin{array}c\begin{array}ca\end{array}\end{array}\right\}').should == "<mfenced close='}' open='{'><mrow><mtable><mtr><mtd><mtable><mtr><mtd><mi>a</mi></mtd></mtr></mtable></mtd></mtr></mtable></mrow></mfenced>"
+			math_ml('\left\{\begin{array}c\begin{array}ca\end{array}\end{array}\right\}')[0].should =~ EimXML::DSL.element(:mfenced, :open=>"{", :close=>"}"){
+				element :mrow do
+					element :mtable do
+						element :mtr do
+							element :mtd do
+								element :mtable do
+									element :mtr do
+										element :mtd do
+											element(:mi).add("a")
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			}
 
-			smml('\left(\sum_a\right)').should == "<mfenced close=')' open='('><mrow><msub><mo>&sum;</mo><mi>a</mi></msub></mrow></mfenced>"
-			smml('\left(\sum_a\right)', true).should == "<mfenced close=')' open='('><mrow><munder><mo>&sum;</mo><mi>a</mi></munder></mrow></mfenced>"
+			math_ml('\left(\sum_a\right)')[0].should =~ EimXML::DSL.element(:mfenced, :open=>"(", :close=>")"){
+				element :mrow do
+					element :msub do
+						element(:mo).add(EimXML::PCString.new("&sum;", true))
+						element(:mi).add("a")
+					end
+				end
+			}
+
+			math_ml('\left(\sum_a\right)', true)[0].should =~ EimXML::DSL.element(:mfenced, :open=>"(", :close=>")"){
+				element :mrow do
+					element :munder do
+						element(:mo).add(EimXML::PCString.new("&sum;", true))
+						element(:mi).add("a")
+					end
+				end
+			}
 
 			lambda{smml('\left(test')}.should raise_parse_error("Brace not closed.", '\left', '(test')
 
-			smml('\left\|a\right\|').should == "<mfenced close='&DoubleVerticalBar;' open='&DoubleVerticalBar;'><mrow><mi>a</mi></mrow></mfenced>"
+			math_ml('\left\|a\right\|')[0].should =~ EimXML::DSL.element(:mfenced, :open=>EimXML::PCString.new("&DoubleVerticalBar;", true), :close=>EimXML::PCString.new("&DoubleVerticalBar;", true)){
+				element :mrow do
+					element(:mi).add("a")
+				end
+			}
 
 			lambda{smml('\left')}.should raise_parse_error("Need brace here.", '\left', "")
 		end
@@ -287,7 +365,16 @@ EOS
 			smml('\ROOT{12}{34}', false, p).should == "<mroot><mn>3</mn><mn>12</mn></mroot><mn>4</mn>"
 			lambda{smml('\root', false, p)}.should raise_parse_error('Error in macro(Need more parameter. "").', '', '\root')
 
-			smml('\begin{braced}{|}{)}\frac12\end{braced}', false, p).should == "<mfenced close=')' open='|'><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></mfenced>"
+
+			math_ml('\begin{braced}{|}{)}\frac12\end{braced}', false, p)[0].should =~ EimXML::DSL.element(:mfenced, :open=>"|", :close=>")"){
+				element(:mrow) do
+					element(:mfrac) do
+						element(:mn).add("1")
+						element(:mn).add("2")
+					end
+				end
+			}
+
 			smml('\begin{sq}{12}{34}a\end{sq}', false, p).should == "<mroot><mrow><mn>12</mn></mrow><mn>34</mn></mroot><mi>a</mi><msqrt><mn>3</mn></msqrt><mn>4</mn>"
 			lambda{smml('\begin{braced}', false, p)}.should raise_parse_error("Need more parameter.", '\begin{braced}', "")
 			lambda{smml('\begin{braced}123', false, p)}.should raise_parse_error('Matching \end not exist.', '\begin{braced}', "123")
@@ -358,11 +445,11 @@ EOS
 			smml('\begin{matrix}\hline a\\\\b\\\\\hline\end{matrix}').should == "<mtable rowlines='solid none solid'><mtr /><mtr><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>b</mi></mtd></mtr><mtr /></mtable>"
 
 			smml('\begin{smallmatrix}\end{smallmatrix}').should == "<mtable />"
-			smml('\begin{pmatrix}\end{pmatrix}').should == "<mfenced close=')' open='('><mrow><mtable /></mrow></mfenced>"
-			smml('\begin{bmatrix}\end{bmatrix}').should == "<mfenced close=']' open='['><mrow><mtable /></mrow></mfenced>"
-			smml('\begin{Bmatrix}\end{Bmatrix}').should == "<mfenced close='}' open='{'><mrow><mtable /></mrow></mfenced>"
-			smml('\begin{vmatrix}\end{vmatrix}').should == "<mfenced close='|' open='|'><mrow><mtable /></mrow></mfenced>"
-			smml('\begin{Vmatrix}\end{Vmatrix}').should == "<mfenced close='&DoubleVerticalBar;' open='&DoubleVerticalBar;'><mrow><mtable /></mrow></mfenced>"
+			math_ml('\begin{pmatrix}\end{pmatrix}')[0].should =~ EimXML::Element.new(:mfenced, :open=>"(", :close=>")")
+			math_ml('\begin{bmatrix}\end{bmatrix}')[0].should =~ EimXML::Element.new(:mfenced, :open=>"[", :close=>"]")
+			math_ml('\begin{Bmatrix}\end{Bmatrix}')[0].should =~ EimXML::Element.new(:mfenced, :open=>"{", :close=>"}")
+			math_ml('\begin{vmatrix}\end{vmatrix}')[0].should =~ EimXML::Element.new(:mfenced, :open=>"|", :close=>"|")
+			math_ml('\begin{Vmatrix}\end{Vmatrix}')[0].should =~ EimXML::Element.new(:mfenced, :open=>EimXML::PCString.new("&DoubleVerticalBar;", true), :close=>EimXML::PCString.new("&DoubleVerticalBar;", true))
 		end
 
 		it "can be used in safe mode" do

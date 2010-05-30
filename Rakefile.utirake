@@ -1,4 +1,4 @@
-utirake_url = "https://s.malagma.org/repos/User/hiraku/ruby/utirake"
+utirake_url = "https://hg.hinet.mydns.jp/utirake"
 
 unless File.directory?("external/utirake")
 	Dir.mkdir("external") unless File.exist?("external")

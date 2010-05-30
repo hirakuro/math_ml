@@ -3,7 +3,7 @@ load "Rakefile.utirake"
 VER = "0.8.1"
 
 UtiRake.setup do
-	external("ssh://hg/hg", %w[eim_xml])
+	external("https://hg.hinet.mydns.jp", %w[eim_xml])
 
 	rdoc do |t|
 		t.title = "MathML Library"

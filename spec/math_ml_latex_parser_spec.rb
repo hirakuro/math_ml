@@ -91,6 +91,7 @@ describe MathML::LaTeX::Parser do
 			smml('\:').should == "<mspace width='0.222em' />"
 			smml('\;').should == "<mspace width='0.278em' />"
 			smml('\!').should == "<mspace width='-0.167em' />"
+			smml('~').should == "<mspace width='1em' />"
 		end
 
 		it "should process operators" do

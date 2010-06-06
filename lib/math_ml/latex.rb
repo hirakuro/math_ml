@@ -486,6 +486,8 @@ EOS
 						parse_sub
 					when @scanner.scan(/'+|\^/)
 						parse_sup
+					when @scanner.scan(/~/)
+						Space.new("1em")
 					when @scanner.scan_command
 						parse_command
 					else

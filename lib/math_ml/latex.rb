@@ -701,7 +701,7 @@ EOS
 				add_commands("entity", "stackrel", "frac", "sqrt", "mbox")
 				add_multi_command(:hat_etc, 'hat', 'breve', 'grave', 'acute', 'dot', 'ddot', 'tilde', 'bar', 'vec', 'check', 'widehat', 'overline', 'widetilde', 'overbrace')
 				add_multi_command(:underbrace_etc, 'underbrace', 'underline')
-				add_multi_command(:quad_etc, "quad", "qquad", ",", ":", ";")
+				add_multi_command(:quad_etc, " ", "quad", "qquad", ",", ":", ";", "!")
 				add_multi_command(:it_etc, "it", "rm", "bf")
 				add_multi_command(:mathit_etc, "mathit", "mathrm", "mathbf", "bm", "mathbb", "mathscr", "mathfrak")
 				add_sym_cmd(SymbolCommands)
@@ -742,6 +742,8 @@ EOS
 
 			def cmd_quad_etc
 				case @scanner[1]
+				when ' '
+					Space.new("1em")
 				when 'quad'
 					Space.new("1em")
 				when 'qquad'
@@ -752,6 +754,8 @@ EOS
 					Space.new("0.222em")
 				when ';'
 					Space.new("0.278em")
+				when '!'
+					Space.new("-0.167em")
 				end
 			end
 

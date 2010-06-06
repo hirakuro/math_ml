@@ -80,8 +80,17 @@ describe MathML::LaTeX::Parser do
 		end
 
 		it "should process non alphabet command" do
-			smml('\,').should == "<mspace width='0.167em' />"
 			smml('\|').should == "<mo>&DoubleVerticalBar;</mo>"
+		end
+
+		it "should process space commands" do
+			smml('\ ').should == "<mspace width='1em' />"
+			smml('\quad').should == "<mspace width='1em' />"
+			smml('\qquad').should == "<mspace width='2em' />"
+			smml('\,').should == "<mspace width='0.167em' />"
+			smml('\:').should == "<mspace width='0.222em' />"
+			smml('\;').should == "<mspace width='0.278em' />"
+			smml('\!').should == "<mspace width='-0.167em' />"
 		end
 
 		it "should process operators" do

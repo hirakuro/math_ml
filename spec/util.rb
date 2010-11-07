@@ -1,13 +1,19 @@
+require "rspec"
 module MathML
 	module Spec
 		module Util
 			def raise_parse_error(message, done, rest)
-				simple_matcher("parse_error") do |given|
-					given.should raise_error(MathML::LaTeX::ParseError){ |e|
-						e.message.should == message
-						e.done.should == done
-						e.rest.should == rest
-					}
+				RSpec::Matchers::Matcher.new(:raise_parse_error) do
+					match do |given|
+						begin
+							given.call
+							@error = nil
+						rescue Exception
+							@error = $!
+						end
+						@error.is_a?(MathML::LaTeX::ParseError) &&
+							[@error.message, @error.done, @error.rest] == [message, done, rest]
+					end
 				end
 			end
 

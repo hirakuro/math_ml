@@ -27,7 +27,10 @@ UtiRake.setup do
 	end
 
 	rcov_spec do |s|
-		s.spec_files << FileList["symbols/**/*_spec.rb"]
+		s.ruby_opts = %w[-rubygems]
+		s.pattern ||= %w[spec/util.rb spec/*_spec.rb]
+		s.pattern = [s.pattern] unless s.pattern.is_a?(Array)
+		s.pattern << "symbols/**/*_spec.rb"
 	end
 
 	spec do |s|
@@ -37,10 +40,9 @@ UtiRake.setup do
 end
 
 namespace :spec do
-	Spec::Rake::SpecTask.new(:symbols) do |s|
-		s.spec_files = FileList["./symbols/**/*_spec.rb"]
-		s.spec_opts << "-c"
-		s.libs << "lib" << "external/lib"
+	RSpec::Core::RakeTask.new(:symbols) do |s|
+		s.pattern = "./symbols/**/*_spec.rb"
+		s.rspec_opts = %w[-c -I lib -I external/lib]
 	end
 end
 

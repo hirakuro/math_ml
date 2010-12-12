@@ -1,3 +1,5 @@
+require "math_ml/latex/builtin"
+
 module MathML
 	module LaTeX
 		MBEC = /\\.|[^\\]/m
@@ -358,7 +360,9 @@ EOS
 
 			attr_accessor :unsecure_entity
 			attr_reader :macro
-			def initialize
+			attr_reader :symbol_table
+
+			def initialize(opt={})
 				@unsecure_entity = false
 				@entities = Hash.new
 				@commands = Hash.new
@@ -370,8 +374,10 @@ EOS
 				@macro.parse(BUILTIN_MACRO)
 				@expanded_command = Array.new
 				@expanded_environment = Array.new
+				@symbol_table = opt[:symbol] || MathML::Symbol::Default
+				@symbol_table = MathML::Symbol::MAP[@symbol_table] if @symbol_table.is_a?(::Symbol)
 
-				super
+				super()
 			end
 
 			def add_entity(list)
@@ -513,11 +519,11 @@ EOS
 				when Font::BOLD_ITALIC
 					i.extend(Variant).variant = Variant::BOLD_ITALIC
 				when Font::BLACKBOLD
-					c = MathML.pcstring(%Q[&#{c}opf;], true)
+					c = symbol_table.convert("#{c}opf")
 				when Font::SCRIPT
-					c = MathML.pcstring(%Q[&#{c}scr;], true)
+					c = symbol_table.convert("#{c}scr")
 				when Font::FRAKTUR
-					c = MathML.pcstring(%Q[&#{c}fr;], true)
+					c = symbol_table.convert("#{c}fr")
 				end
 				i << c
 			end
@@ -591,10 +597,10 @@ EOS
 				data = @symbols[com]
 				return nil unless data
 
+				data, s = data
 				su = data[0]
 				el = data[1]
 				el = :o unless el
-				s = data[2]
 				s = com.dup.untaint.to_sym unless s
 				s = com if s.is_a?(String) && s.length==0
 
@@ -613,15 +619,16 @@ EOS
 				end
 
 				case s
-				when String
 				when Fixnum
-					s = "&\#x#{s.to_s(16)};"
-				when Symbol
-					s = "&#{s.to_s};"
+					s = MathML.pcstring("&\#x#{s.to_s(16)};", true)
+				when ::Symbol
+					s = symbol_table.convert(s)
+				else
+					MathML.pcstring(s, true)
 				end
 
 				return s if plain
-				el << MathML.pcstring(s, true)
+				el << s
 				el.as_display_style if su==:u
 				el
 			end
@@ -706,8 +713,8 @@ EOS
 				add_multi_command(:quad_etc, " ", "quad", "qquad", ",", ":", ";", "!")
 				add_multi_command(:it_etc, "it", "rm", "bf")
 				add_multi_command(:mathit_etc, "mathit", "mathrm", "mathbf", "bm", "mathbb", "mathscr", "mathfrak")
-				add_sym_cmd(SymbolCommands)
-				add_delimiter(Delimiters)
+				add_sym_cmd(Builtin::Symbol::MAP)
+				add_delimiter(Builtin::Symbol::DELIMITERS)
 
 				super
 			end
@@ -912,7 +919,6 @@ EOS
 				p = @scanner.pos
 				o = @scanner.scan_any
 				raise ParseError.new('Need brace here.') unless o && (o=~RE::BRACES || @delimiters.include?(o[RE::COMMANDS, 1]))
-
 				f.open = (o=~RE::BRACES ? o : parse_symbol_command(o[RE::COMMANDS, 1], true))
 				f << push_container(Row.new) do |r|
 					until @scanner.peek_command==right

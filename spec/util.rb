@@ -22,7 +22,7 @@ module MathML
 			end
 
 			def math_ml(src, display_style=false, parser=nil)
-				parser ||= new_parser
+				parser ||= @parser || new_parser
 				parser.parse(src, display_style)
 			end
 

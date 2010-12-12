@@ -14,12 +14,12 @@ module MathML
 	end
 
 	def self.pcstring(s, encoded=false)
-		EimXML::PCString.new(s, encoded)
+		s.is_a?(EimXML::PCString) ? s : EimXML::PCString.new(s, encoded)
 	end
 
 	class Error < StandardError; end
 end
 
 require "math_ml/element"
+require "math_ml/symbol/entity_reference"
 require "math_ml/latex"
-require "math_ml/latex/builtin_commands"

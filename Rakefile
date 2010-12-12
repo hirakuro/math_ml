@@ -46,6 +46,15 @@ namespace :spec do
 	end
 end
 
+task :package do
+	name = "math_ml-#{VER}"
+	cp "external/eim_xml/lib/eim_xml.rb", "pkg/#{name}/lib/"
+	Dir.chdir "pkg" do
+		rm "#{name}.tar.gz"
+		sh "tar zcf #{name}.tar.gz #{name}/"
+	end
+end
+
 task :default => :spec
 task "spec:no_here" => "spec:apart"
 task :all => [:spec, "spec:symbols"]

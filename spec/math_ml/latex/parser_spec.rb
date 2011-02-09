@@ -1,3 +1,4 @@
+# coding: utf-8
 require "eim_xml/parser"
 require "eim_xml/dsl"
 require "math_ml"

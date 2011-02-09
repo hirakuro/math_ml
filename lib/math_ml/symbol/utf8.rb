@@ -1,3 +1,4 @@
+# coding: utf-8
 module MathML
 	module Symbol
 		MAP = {} unless const_defined?(:MAP)

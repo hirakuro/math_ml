@@ -103,17 +103,31 @@ describe MathML::LaTeX::Parser do
 			check_hash("mo", {'\backslash'=>'\\', '\%'=>'%', '\{'=>'{', '\}'=>'}', '\$'=>'$', '\#'=>'#'})
 		end
 
-		it "should process prime" do
-			smml("a'").should == "<msup><mi>a</mi><mo>&prime;</mo></msup>"
-			smml("a''").should == "<msup><mi>a</mi><mo>&prime;&prime;</mo></msup>"
-			smml("a'''").should == "<msup><mi>a</mi><mo>&prime;&prime;&prime;</mo></msup>"
-			smml("'").should == "<msup><none /><mo>&prime;</mo></msup>"
+		describe "should process prime" do
+			it "entity reference" do
+				smml("a'").should == "<msup><mi>a</mi><mo>&prime;</mo></msup>"
+				smml("a''").should == "<msup><mi>a</mi><mo>&prime;&prime;</mo></msup>"
+				smml("a'''").should == "<msup><mi>a</mi><mo>&prime;&prime;&prime;</mo></msup>"
+				smml("'").should == "<msup><none /><mo>&prime;</mo></msup>"
 
-			lambda{smml("a^b'")}.should raise_parse_error("Double superscript.", "a^b", "'")
+				lambda{smml("a^b'")}.should raise_parse_error("Double superscript.", "a^b", "'")
 
-			smml("a'^b").should == "<msup><mi>a</mi><mrow><mo>&prime;</mo><mi>b</mi></mrow></msup>"
-			smml("a'''^b").should == "<msup><mi>a</mi><mrow><mo>&prime;&prime;&prime;</mo><mi>b</mi></mrow></msup>"
-			smml("a'b").should == "<msup><mi>a</mi><mo>&prime;</mo></msup><mi>b</mi>"
+				smml("a'^b").should == "<msup><mi>a</mi><mrow><mo>&prime;</mo><mi>b</mi></mrow></msup>"
+				smml("a'''^b").should == "<msup><mi>a</mi><mrow><mo>&prime;&prime;&prime;</mo><mi>b</mi></mrow></msup>"
+				smml("a'b").should == "<msup><mi>a</mi><mo>&prime;</mo></msup><mi>b</mi>"
+			end
+
+			it "utf8" do
+				@parser = MathML::LaTeX::Parser.new(:symbol=>MathML::Symbol::UTF8)
+				smml("a'").should == "<msup><mi>a</mi><mo>′</mo></msup>"
+				smml("a'''").should == "<msup><mi>a</mi><mo>′′′</mo></msup>"
+			end
+
+			it "character reference" do
+				@parser = MathML::LaTeX::Parser.new(:symbol=>MathML::Symbol::CharacterReference)
+				smml("a'").should == "<msup><mi>a</mi><mo>&#x2032;</mo></msup>"
+				smml("a'''").should == "<msup><mi>a</mi><mo>&#x2032;&#x2032;&#x2032;</mo></msup>"
+			end
 		end
 
 		it "should process sqrt" do

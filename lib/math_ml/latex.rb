@@ -564,7 +564,9 @@ EOS
 				raise ParseError.new("Double superscript.", @scanner[0]) if e.sup
 				if /'+/=~@scanner[0]
 					prime = Operator.new
-					prime << MathML.pcstring('&prime;'*@scanner[0].size, true)
+					@scanner[0].size.times do
+						prime << symbol_table.convert("prime")
+					end
 					unless @scanner.scan(/\^/)
 						e.sup = prime
 						return e

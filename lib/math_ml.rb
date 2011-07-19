@@ -3,6 +3,12 @@
 # Copyright (C) 2005, KURODA Hiraku <hiraku@hinet.mydns.jp>
 # You can redistribute it and/or modify it under GPL2.
 
+warn "*"*60 << "\n" << <<EOT << "*"*60
+[DEPRECATION]
+"mathml" gem is deprecated.
+Please use "math_ml" gem instead.
+EOT
+
 require "strscan"
 module MathML
 	require "eim_xml"

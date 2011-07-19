@@ -1,6 +1,6 @@
 load "Rakefile.utirake"
 
-VER = "0.10"
+VER = "0.10.1"
 
 UtiRake.setup do
 	external("https://hg.hinet.mydns.jp", %w[eim_xml])
@@ -16,14 +16,19 @@ UtiRake.setup do
 	end
 
 	gemspec do |s|
-		s.name = "math_ml"
+		s.name = "mathml"
 		s.rubyforge_project = "mathml"
 		s.version = VER
 		s.summary = "MathML Library"
 		s.author = "KURODA Hiraku"
 		s.email = "hiraku@hinet.mydns.jp"
 		s.homepage = "http://mathml.rubyforge.org/"
-		s.add_dependency("eim_xml")
+		s.add_dependency("eimxml")
+		s.post_install_message = "*"*60 << "\n" << <<EOT << "*"*60
+[DEPRECATION]
+"mathml" gem is deprecated.
+Please use "math_ml" gem instead.
+EOT
 	end
 
 	rcov_spec do |s|

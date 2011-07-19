@@ -8,7 +8,7 @@ UtiRake.setup do
 	rdoc do |t|
 		t.title = "MathML Library"
 		t.main = "README"
-		t.rdoc_files << FileList["lib/**/*.rb", "README"]
+		t.rdoc_files.include(FileList["lib/**/*.rb", "README"])
 	end
 
 	publish("mathml", "hiraku") do

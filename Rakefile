@@ -28,9 +28,9 @@ UtiRake.setup do
 
 	rcov_spec do |s|
 		s.ruby_opts = %w[-rubygems]
-		s.pattern ||= %w[spec/util.rb spec/*_spec.rb]
+		s.pattern ||= %w[spec/util.rb spec/**/*_spec.rb]
 		s.pattern = [s.pattern] unless s.pattern.is_a?(Array)
-		s.pattern << "symbols/**/*_spec.rb"
+#		s.pattern << "symbols/**/*_spec.rb"
 	end
 
 	spec do |s|

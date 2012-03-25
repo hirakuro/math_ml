@@ -3,7 +3,12 @@ module MathML
 	module Spec
 		module Util
 			def raise_parse_error(message, done, rest)
-				RSpec::Matchers::Matcher.new(:raise_parse_error){
+				begin
+					matcher_class = RSpec::Matchers::DSL::Matcher
+				rescue NameError
+					matcher_class = RSpec::Matchers::Matcher
+				end
+				matcher_class.new(:raise_parse_error){
 					match do |given|
 						begin
 							given.call

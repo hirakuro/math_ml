@@ -3,7 +3,7 @@ module MathML
 	module Spec
 		module Util
 			def raise_parse_error(message, done, rest)
-				RSpec::Matchers::Matcher.new(:raise_parse_error) do
+				RSpec::Matchers::Matcher.new(:raise_parse_error){
 					match do |given|
 						begin
 							given.call
@@ -14,7 +14,7 @@ module MathML
 						@error.is_a?(MathML::LaTeX::ParseError) &&
 							[@error.message, @error.done, @error.rest] == [message, done, rest]
 					end
-				end
+				}.for_expected
 			end
 
 			def new_parser

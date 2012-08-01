@@ -710,8 +710,8 @@ EOS
 			def initialize
 				add_commands("\\"=>:backslash)
 				add_commands("entity", "stackrel", "frac", "sqrt", "mbox")
-				add_multi_command(:hat_etc, 'hat', 'breve', 'grave', 'acute', 'dot', 'ddot', 'tilde', 'bar', 'vec', 'check', 'widehat', 'overline', 'widetilde', 'overbrace')
-				add_multi_command(:underbrace_etc, 'underbrace', 'underline')
+				add_multi_command(:hat_etc, *OVERS.keys)
+				add_multi_command(:underbrace_etc, *UNDERS.keys)
 				add_multi_command(:quad_etc, " ", "quad", "qquad", ",", ":", ";", "!")
 				add_multi_command(:it_etc, "it", "rm", "bf")
 				add_multi_command(:mathit_etc, "mathit", "mathrm", "mathbf", "bm", "mathbb", "mathscr", "mathfrak")

@@ -702,7 +702,7 @@ EOS
 
 		module BuiltinCommands
 			OVERS = {'hat'=>'circ', 'breve'=>'smile', 'grave'=>'grave',
-				'acute'=>'acute', 'dot'=>'sdot', 'ddot'=>'nldr', 'tilde'=>'tilde',
+				'acute'=>'acute', 'dot'=>'sdot', 'ddot'=>'nldr', 'dddot'=>'mldr', 'tilde'=>'tilde',
 				'bar'=>'macr', 'vec'=>'rightarrow', 'check'=>'vee', 'widehat'=>'circ',
 				'overline'=>'macr', 'widetilde'=>'tilde', 'overbrace'=>'OverBrace'}
 			UNDERS = {'underbrace'=>'UnderBrace', 'underline'=>'macr'}

@@ -530,7 +530,7 @@ EOS
 
 			def parse_operator
 				o = @scanner.matched
-				Operator.new << o
+				Operator.new.tap{|op| op[:stretchy]="false"} << o
 			end
 
 			def parse_block
@@ -614,6 +614,7 @@ EOS
 					el.extend(Variant).variant = Variant::NORMAL unless s.is_a?(String)&&s.length>1
 				when :o
 					el = Operator.new
+					el[:stretchy] = "false"
 				when :n
 					el = Number.new
 				else

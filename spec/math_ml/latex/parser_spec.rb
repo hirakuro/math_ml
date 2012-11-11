@@ -11,13 +11,15 @@ describe MathML::LaTeX::Parser do
 
 	def check_chr(tag, src)
 		src.scan(/./) do |c|
-			smml(c).should == "<#{tag}>#{c}</#{tag}>"
+			tag_re = Regexp.escape(tag)
+			smml(c).should =~ /\A<#{tag_re}(\s+[^>]+)?>#{Regexp.escape(c)}<\/#{tag_re}>\z/
 		end
 	end
 
 	def check_hash(tag, hash)
 		hash.each do |k, v|
-			smml(k).should == "<#{tag}>#{v}</#{tag}>"
+			tag_re = Regexp.escape(tag)
+			smml(k).should =~ /\A<#{tag_re}(\s+[^>]+)?>#{Regexp.escape(v)}<\/#{tag_re}>\z/
 		end
 	end
 
@@ -72,7 +74,7 @@ describe MathML::LaTeX::Parser do
 		it "should process numerics" do
 			smml('1234567890').should == "<mn>1234567890</mn>"
 			smml('1.2').should == "<mn>1.2</mn>"
-			smml('1.').should == "<mn>1</mn><mo>.</mo>"
+			smml('1.').should == "<mn>1</mn><mo stretchy='false'>.</mo>"
 			smml('.2').should == "<mn>.2</mn>"
 			smml('1.2.3').should == "<mn>1.2</mn><mn>.3</mn>"
 		end
@@ -83,7 +85,7 @@ describe MathML::LaTeX::Parser do
 		end
 
 		it "should process non alphabet command" do
-			smml('\|').should == "<mo>&DoubleVerticalBar;</mo>"
+			smml('\|').should == "<mo stretchy='false'>&DoubleVerticalBar;</mo>"
 		end
 
 		it "should process space commands" do
@@ -150,12 +152,12 @@ describe MathML::LaTeX::Parser do
 		end
 
 		it "should process underover" do
-			smml('\sum_a^b', true).should == "<munderover><mo>&sum;</mo><mi>a</mi><mi>b</mi></munderover>"
-			smml('\sum_a^b').should == "<msubsup><mo>&sum;</mo><mi>a</mi><mi>b</mi></msubsup>"
-			smml('\sum_a', true).should == "<munder><mo>&sum;</mo><mi>a</mi></munder>"
-			smml('\sum^a', true).should == "<mover><mo>&sum;</mo><mi>a</mi></mover>"
-			smml('\sum_a').should == "<msub><mo>&sum;</mo><mi>a</mi></msub>"
-			smml('\sum^a').should == "<msup><mo>&sum;</mo><mi>a</mi></msup>"
+			smml('\sum_a^b', true).should == "<munderover><mo stretchy='false'>&sum;</mo><mi>a</mi><mi>b</mi></munderover>"
+			smml('\sum_a^b').should == "<msubsup><mo stretchy='false'>&sum;</mo><mi>a</mi><mi>b</mi></msubsup>"
+			smml('\sum_a', true).should == "<munder><mo stretchy='false'>&sum;</mo><mi>a</mi></munder>"
+			smml('\sum^a', true).should == "<mover><mo stretchy='false'>&sum;</mo><mi>a</mi></mover>"
+			smml('\sum_a').should == "<msub><mo stretchy='false'>&sum;</mo><mi>a</mi></msub>"
+			smml('\sum^a').should == "<msup><mo stretchy='false'>&sum;</mo><mi>a</mi></msup>"
 
 			lambda{smml('\sum_b_c')}.should raise_parse_error("Double subscript.", '\sum_b', "_c")
 			lambda{smml('\sum^b^c')}.should raise_parse_error("Double superscript.", '\sum^b', "^c")
@@ -349,7 +351,7 @@ describe MathML::LaTeX::Parser do
 		end
 
 		it "should parse stackrel" do
-			smml('\stackrel\to=').should == "<mover><mo>=</mo><mo>&rightarrow;</mo></mover>"
+			smml('\stackrel\to=').should == "<mover><mo stretchy='false'>=</mo><mo stretchy='false'>&rightarrow;</mo></mover>"
 			smml('\stackrel12').should == "<mover><mn>2</mn><mn>1</mn></mover>"
 		end
 
@@ -490,7 +492,7 @@ EOS
 		end
 
 		it "should parse symbols" do
-			smml('\precneqq').should == "<mo>&#x2ab5;</mo>"
+			smml('\precneqq').should == "<mo stretchy='false'>&#x2ab5;</mo>"
 		end
 	end
 

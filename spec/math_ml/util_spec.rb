@@ -143,9 +143,9 @@ describe MathML::Util::SimpleLaTeX do
 			"a\n<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\nc<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e")
 
 		assert_data('$\\$$',
-			["<mo>$</mo>"],
+			["<mo stretchy='false'>$</mo>"],
 			['$\$$'], [], [], [], [], "\001m0\001",
-			"<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mo>$</mo></math>")
+			"<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mo stretchy='false'>$</mo></math>")
 	end
 
 	it "should parse dmath environment" do
@@ -633,7 +633,7 @@ EOT
 			end
 		end
 		encoded.should == "test\n\001u0\001\nend\n"
-		simplify_math(s.decode(encoded, data)).should == simplify_math("test\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mo>=</mo></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mo>=</mo></mtd><mtd><mi>d</mi></mtd></mtr></mtable></math>\nend\n")
+		simplify_math(s.decode(encoded, data)).should == simplify_math("test\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mo stretchy='false'>=</mo></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mo stretchy='false'>=</mo></mtd><mtd><mi>d</mi></mtd></mtr></mtable></math>\nend\n")
 
 		encoded, data = s.encode('\begin{eqnarray}a\end{eqnarray}', MathML::Util::EQNARRAY_RE) do |scanner|
 			s.parse_eqnarray(scanner[1]) if scanner.scan(MathML::Util::EQNARRAY_RE)

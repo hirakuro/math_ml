@@ -1,6 +1,6 @@
 load "Rakefile.utirake"
 
-VER = "0.12.2"
+VER = "0.14"
 
 UtiRake.setup do
 	external("https://hg.hinet.mydns.jp", %w[eim_xml])

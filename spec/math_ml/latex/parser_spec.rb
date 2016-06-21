@@ -551,27 +551,27 @@ EOS
 			end
 
 			it "character entity reference version by default" do
-				require("math_ml").should be_true
+				require("math_ml").should be true
 				MathML::LaTeX::Parser.new.symbol_table.should == MathML::Symbol::EntityReference
 			end
 
 			describe "character entity reference version when set by requiring" do
 				it do
-					require("math_ml/symbol/entity_reference").should be_true
+					require("math_ml/symbol/entity_reference").should be true
 					MathML::LaTeX::Parser.new.symbol_table.should == MathML::Symbol::EntityReference
 				end
 			end
 
 			describe "utf8 version when set by requiring" do
 				it do
-					require("math_ml/symbol/utf8").should be_true
+					require("math_ml/symbol/utf8").should be true
 					MathML::LaTeX::Parser.new.symbol_table.should == MathML::Symbol::UTF8
 				end
 			end
 
 			describe "numeric character reference version when set by requiring" do
 				it do
-					require("math_ml/symbol/character_reference").should be_true
+					require("math_ml/symbol/character_reference").should be true
 					MathML::LaTeX::Parser.new.symbol_table.should == MathML::Symbol::CharacterReference
 				end
 			end

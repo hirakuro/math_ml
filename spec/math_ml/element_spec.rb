@@ -6,7 +6,7 @@ describe MathML::Element do
 		e = MathML::Element.new("test")
 		r = e.as_display_style
 		r.should equal(e)
-		e.display_style.should be_true
+		e.display_style.should be true
 	end
 
 	it "#pop" do

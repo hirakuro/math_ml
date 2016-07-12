@@ -40,11 +40,11 @@ RSpec::Core::RakeTask.new do |s|
 end
 
 namespace :spec do
-	task :coverage do |t|
-		cmd = "rcov $(which rspec)"
-		cmd << " -I lib -x .bundle,gems"
-		cmd << " spec/util.rb $(find spec -name \\*_spec.rb)"
-		sh cmd
+	RSpec::Core::RakeTask.new(:coverage) do |s|
+		s.rspec_opts ||= []
+		s.rspec_opts << "-c"
+		s.rspec_opts << "-I" << "." << "-I" << "./lib" << "-I" << "./external/lib"
+		s.rspec_opts << "-r" << "./spec/helper_coverage"
 	end
 
 	RSpec::Core::RakeTask.new(:profile) do |s|

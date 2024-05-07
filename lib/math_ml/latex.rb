@@ -603,7 +603,7 @@ EOS
 				su = data[0]
 				el = data[1]
 				el = :o unless el
-				s = com.dup.untaint.to_sym unless s
+				s = com.dup.to_sym unless s
 				s = com if s.is_a?(String) && s.length==0
 
 				case el
@@ -622,7 +622,7 @@ EOS
 				end
 
 				case s
-				when Fixnum
+				when Integer
 					s = MathML.pcstring("&\#x#{s.to_s(16)};", true)
 				when ::Symbol
 					s = symbol_table.convert(s)

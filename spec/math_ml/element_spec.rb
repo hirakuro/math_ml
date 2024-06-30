@@ -2,31 +2,31 @@ require "math_ml"
 
 describe MathML::Element do
 	it "#display_style and #as_display_style" do
-		MathML::Element.new("test").display_style.should == nil
+		expect(MathML::Element.new("test").display_style).to eq(nil)
 		e = MathML::Element.new("test")
 		r = e.as_display_style
-		r.should equal(e)
-		e.display_style.should be true
+		expect(r).to equal(e)
+		expect(e.display_style).to be true
 	end
 
 	it "#pop" do
 		e = MathML::Element.new("super")
 		s = MathML::Element.new("sub")
 
-		e.pop.should be_nil
+		expect(e.pop).to be_nil
 
 		e << s
-		e.pop.should equal(s)
-		e.pop.should be_nil
+		expect(e.pop).to equal(s)
+		expect(e.pop).to be_nil
 
 		e << "text"
-		e.pop.should == "text"
-		e.pop.should be_nil
+		expect(e.pop).to eq("text")
+		expect(e.pop).to be_nil
 	end
 
 	it "#to_s" do
 		e = MathML::Element.new("e")
 		e << "test<"
-		e.to_s.should == "<e>test&lt;</e>"
+		expect(e.to_s).to eq("<e>test&lt;</e>")
 	end
 end

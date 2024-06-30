@@ -3,12 +3,12 @@ require "math_ml"
 describe MathML do
 	it "should not raise error when math_ml.rb is required twice" do
 		if require_relative("../lib/math_ml")
-			lambda{MathML::LaTeX::Parser.new}.should_not raise_error
+			expect{MathML::LaTeX::Parser.new}.not_to raise_error
 		end
 	end
 
 	it ".pcstring" do
-		MathML.pcstring('<>&"\'').to_s.should == "&lt;&gt;&amp;&quot;&apos;"
-		MathML.pcstring('<tag>&amp;"\'</tag>', true).to_s.should == '<tag>&amp;"\'</tag>'
+		expect(MathML.pcstring('<>&"\'').to_s).to eq("&lt;&gt;&amp;&quot;&apos;")
+		expect(MathML.pcstring('<tag>&amp;"\'</tag>', true).to_s).to eq('<tag>&amp;"\'</tag>')
 	end
 end

@@ -15,4 +15,7 @@ group :development do
 	gem "rubocop", "~>1.28.0"
 	gem "rubocop-rake", "~> 0.6.0"
 	gem "rubocop-rspec", "~> 2.10"
+	gem "guard", "~> 2.18"
+	gem "guard-rubocop", "~> 1.5"
+	gem "guard-rspec", "~> 4.7"
 end

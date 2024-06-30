@@ -1,5 +1,5 @@
+require "spec_util"
 require "math_ml"
-require "spec/util"
 
 describe MathML::LaTeX::Macro do
 	include MathML::Spec::Util

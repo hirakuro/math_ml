@@ -1,8 +1,8 @@
 # coding: utf-8
+require "spec_util"
 require "eim_xml/parser"
 require "eim_xml/dsl"
 require "math_ml"
-require "spec/util"
 require "math_ml/symbol/character_reference"
 require "math_ml/symbol/utf8"
 

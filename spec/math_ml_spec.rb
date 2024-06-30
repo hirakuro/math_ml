@@ -2,7 +2,7 @@ require "math_ml"
 
 describe MathML do
 	it "should not raise error when math_ml.rb is required twice" do
-		if require("lib/math_ml")
+		if require_relative("../lib/math_ml")
 			lambda{MathML::LaTeX::Parser.new}.should_not raise_error
 		end
 	end

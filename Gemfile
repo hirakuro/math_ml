@@ -1,9 +1,15 @@
-source "http://rubygems.org"
+# frozen_string_literal: true
 
-group :development do
+source "https://rubygems.org"
+
+gem "eim_xml"
+
+group :development, :test do
 	gem "rake", "~>10"
 	gem "rspec", "~>2"
-	gem "rdoc"
 	gem "simplecov"
-	gem "eim_xml"
+end
+
+group :development do
+	gem "rdoc"
 end

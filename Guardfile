@@ -15,7 +15,7 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
-# Note: The cmd option is now required due to the increasing number of ways
+# NOTE: The cmd option is now required due to the increasing number of ways
 #       rspec may be run, below are examples of the most common uses.
 #  * bundler: 'bundle exec rspec'
 #  * bundler binstubs: 'bin/rspec'
@@ -25,8 +25,8 @@
 #  * 'just' rspec: 'rspec'
 
 group :red_green_refactor, halt_on_fail: true do
-  guard :rspec, cmd: "bundle exec rspec" do
-    require "guard/rspec/dsl"
+  guard :rspec, cmd: 'bundle exec rspec' do
+    require 'guard/rspec/dsl'
     dsl = Guard::RSpec::Dsl.new(self)
 
     # Feel free to open issues for suggestions and improvements
@@ -43,7 +43,7 @@ group :red_green_refactor, halt_on_fail: true do
   end
 
   guard :rubocop, all_on_start: false do
-    watch(%r{.+\.rb$})
+    watch(/.+\.rb$/)
     watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
   end
 end

@@ -6,3 +6,12 @@ require:
 
 AllCops:
   NewCops: enable
+
+### TODO
+
+# Offense count: 1
+# Configuration parameters: AllowedIdentifiers.
+# SupportedStyles: snake_case, camelCase
+Naming/VariableName:
+  Exclude:
+    - 'spec/math_ml/latex/parser_spec.rb'

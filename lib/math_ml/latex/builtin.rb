@@ -1,5 +1,5 @@
 module MathML::LaTeX
-	module Builtin
-	end
+  module Builtin
+  end
 end
-require "math_ml/latex/builtin/symbol"
+require 'math_ml/latex/builtin/symbol'

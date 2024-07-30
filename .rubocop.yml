@@ -6,3 +6,5 @@ require:
 
 AllCops:
   NewCops: enable
+  Exclude:
+    - 'bin/**'

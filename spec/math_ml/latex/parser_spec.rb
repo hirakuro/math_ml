@@ -530,21 +530,24 @@ describe MathML::LaTeX::Parser do
     end
 
     context 'should return default symbol module' do
+      math_ml = nil
+      loaded_features = nil
+
       before do
-        @loaded_features = $LOADED_FEATURES.dup
+        loaded_features = $LOADED_FEATURES.dup
         $LOADED_FEATURES.delete_if { |i| i =~ /math_ml/ }
         if ::Object.const_defined?(:MathML)
-          @MathML = ::Object.const_get(:MathML)
+          math_ml = ::Object.const_get(:MathML)
           ::Object.module_eval { remove_const(:MathML) }
         end
       end
 
       after do
         $LOADED_FEATURES.clear
-        $LOADED_FEATURES.push(@loaded_features.shift) until @loaded_features.empty?
-        if @MathML
+        $LOADED_FEATURES.push(loaded_features.shift) until loaded_features.empty?
+        if math_ml
           ::Object.module_eval { remove_const(:MathML) }
-          ::Object.const_set(:MathML, @MathML)
+          ::Object.const_set(:MathML, math_ml)
         end
       end
 

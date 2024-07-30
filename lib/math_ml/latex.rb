@@ -126,7 +126,7 @@ module MathML
           end
           s = matched.to_s
         end
-        r << s
+        r + s
       end
 
       def scan_option
@@ -464,7 +464,7 @@ module MathML
         rescue OptionNotClosed => e
           raise ParseError.new('Option not closed.', @scanner.rest)
         rescue ParseError => e
-          e.rest << @scanner.rest.to_s
+          e.rest += @scanner.rest.to_s
           raise
         ensure
           @scanner, @container, @font, @ds = orig

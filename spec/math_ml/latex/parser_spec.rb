@@ -479,16 +479,6 @@ describe MathML::LaTeX::Parser do
       expect(math_ml('\begin{Vmatrix}\end{Vmatrix}')[0]).to match(EimXML::Element.new(:mfenced, open: EimXML::PCString.new('&DoubleVerticalBar;', true), close: EimXML::PCString.new('&DoubleVerticalBar;', true)))
     end
 
-    it 'can be used in safe mode' do
-      Thread.start do
-        $SAFE = 1
-        expect($SAFE).to eq(1)
-        expect { smml('\alpha'.taint) }.not_to raise_error
-      end.join
-
-      expect($SAFE).to eq(0)
-    end
-
     it 'parses symbols' do
       expect(smml('\precneqq')).to eq("<mo stretchy='false'>&#x2ab5;</mo>")
     end

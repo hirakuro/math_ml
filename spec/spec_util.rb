@@ -9,6 +9,8 @@ module MathML
           matcher_class = RSpec::Matchers::Matcher
         end
         matcher_class.new(:raise_parse_error) do
+          supports_block_expectations
+
           match do |given|
             begin
               given.call

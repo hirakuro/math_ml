@@ -73,7 +73,9 @@ class CharacterCommandGenerator
 
   class Generator
     KEYS = []
-    IO.read("#{HERE}/../../lib/math_ml/latex/builtin/symbol/entity_reference/map.rb").scan(/^"([^"]+)"=>/) { |m| KEYS << m[0] }
+    IO.read("#{HERE}/../../lib/math_ml/latex/builtin/symbol/entity_reference/map.rb").scan(/^"([^"]+)"=>/) do |m|
+      KEYS << m[0]
+    end
 
     attr_reader :converter
 

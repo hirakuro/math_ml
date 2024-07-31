@@ -131,7 +131,8 @@ describe MathML::Util::SimpleLaTeX do
   end
 
   it '(spec for helper)' do
-    expect(simplify_math("<math c='d' a='b'>..</math><math g='h' e='f'></math>")).to eq(['<math>..</math><math></math>', %w[a='b' c='d'], %w[e='f' g='h']])
+    expect(simplify_math("<math c='d' a='b'>..</math><math g='h' e='f'></math>"))
+      .to eq(['<math>..</math><math></math>', %w[a='b' c='d'], %w[e='f' g='h']])
   end
 
   it 'parses math environment' do
@@ -141,7 +142,8 @@ describe MathML::Util::SimpleLaTeX do
       ["$\nb\n$", "\\(\nd\n\\)"],
       [], [], [], [],
       "a\n\001m0\001\nc\001m1\001e",
-      "a\n<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\nc<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e"
+      "a\n<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\n" \
+      "c<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e"
     )
 
     assert_data(
@@ -160,7 +162,8 @@ describe MathML::Util::SimpleLaTeX do
       ["$$\nb\n$$", "\\[\nd\n\\]"],
       [], [],
       "a\n\001d0\001\nc\001d1\001e",
-      "a\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\nc<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e"
+      "a\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\n" \
+      "c<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e"
     )
   end
 
@@ -173,7 +176,10 @@ describe MathML::Util::SimpleLaTeX do
       ['$$d$$', '\[h\]'],
       [], [],
       "a\001m0\001c\001d0\001e\001m1\001g\001d1\001i",
-      "a<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>c<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math>g<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>h</mi></math>i"
+      "a<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>c" \
+      "<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e" \
+      "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math>g" \
+      "<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>h</mi></math>i"
     )
   end
 
@@ -184,7 +190,8 @@ describe MathML::Util::SimpleLaTeX do
       "$a<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"
     )
 
-    assert_data("\\<\\\n", [], [], [], [], ['&lt;', "<br />\n"], ['\\<', "\\\n"], "\001e0\001\001e1\001", "&lt;<br />\n")
+    assert_data("\\<\\\n", [], [], [], [], ['&lt;', "<br />\n"], ['\\<', "\\\n"], "\001e0\001\001e1\001",
+                "&lt;<br />\n")
   end
 
   it 'accepts through_list option' do
@@ -237,7 +244,9 @@ describe MathML::Util::SimpleLaTeX do
     assert_data(
       'a$b$c%d%e[f]', ['<mi>d</mi>'], ['%d%'], ['<mi>f</mi>'], ['[f]'], [], [],
       "a$b$c\001m0\001e\001d0\001",
-      "a$b$c<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math>", s
+      "a$b$c<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e" \
+      "<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math>",
+      s
     )
 
     s = MathML::Util::SimpleLaTeX.new(math_env_list: [/!(.*?)!/, /"(.*)"/], dmath_env_list: [/\#(.*)\#/, /&(.*)&/])
@@ -247,7 +256,11 @@ describe MathML::Util::SimpleLaTeX do
       ['<mi>f</mi>', '<mi>h</mi>'], ['#f#', '&h&'],
       [], [],
       "a\001m0\001c\001m1\001e\001d0\001g\001d1\001i",
-      "a<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>c<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math>g<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>h</mi></math>i", s
+      "a<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>c" \
+      "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>d</mi></math>e" \
+      "<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math>g" \
+      "<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>h</mi></math>i",
+      s
     )
   end
 
@@ -281,7 +294,11 @@ describe MathML::Util::SimpleLaTeX do
     expect(data.dmath_list[0].attributes[:display]).to eq('block')
     expect(sma(data.math_list)).to eq(['<mi>a</mi>'])
     expect(sma(data.dmath_list)).to eq(['<mi>b</mi>'])
-    expect(simplify_math(s.decode(encoded, data))).to eq(simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math> <math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"))
+    expect(simplify_math(s.decode(encoded, data)))
+      .to eq(simplify_math(
+               "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math> " \
+               "<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"
+             ))
   end
 
   it '#set_encode_proc' do
@@ -402,7 +419,10 @@ describe MathML::Util::SimpleLaTeX do
       end
       r = "t#{opt[:type]}i#{opt[:index]}s#{opt[:src]}#{i}"
     end
-    expect(r).to eq('tmathi0s$a$<mi>a</mi>tmathi1s$b$<mi>b</mi>tdmathi0s$$c$$<mi>c</mi>tdmathi1s$$d$$<mi>d</mi>tescapei0s\\eetescapei1s\\\\\\')
+    expect(r).to eq(
+      'tmathi0s$a$<mi>a</mi>tmathi1s$b$<mi>b</mi>tdmathi0s$$c$$<mi>c</mi>tdmathi1s$$d$$<mi>d</mi>' \
+      'tescapei0s\\eetescapei1s\\\\\\'
+    )
 
     r = s.decode(encoded, data) do |_item, _opt|
       nil
@@ -452,7 +472,10 @@ describe MathML::Util::SimpleLaTeX do
     end
     encoded, data = s.encode(src)
     r = s.decode(encoded, data)
-    expect(r).to eq('tmathi0s$a$<mi>a</mi>tmathi1s$b$<mi>b</mi>tdmathi0s$$c$$<mi>c</mi>tdmathi1s$$d$$<mi>d</mi>tescapei0s\\eetescapei1s\\\\\\')
+    expect(r).to eq(
+      'tmathi0s$a$<mi>a</mi>tmathi1s$b$<mi>b</mi>tdmathi0s$$c$$<mi>c</mi>tdmathi1s$$d$$<mi>d</mi>' \
+      'tescapei0s\\eetescapei1s\\\\\\'
+    )
 
     s.reset_decode_proc
     expect(s.decode(encoded, data)).to eq(original_decoded)
@@ -559,7 +582,11 @@ describe MathML::Util::SimpleLaTeX do
   it '#decode_partial' do
     s = MathML::Util::SimpleLaTeX.new
     encoded, data = s.encode('$a$$b$')
-    expect(simplify_math(s.decode_partial(:math, encoded, data))).to eq(simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math><math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"))
+    expect(simplify_math(s.decode_partial(:math, encoded, data)))
+      .to eq(simplify_math(
+               "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>" \
+               "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>"
+             ))
 
     s.set_encode_proc(/\\</) do |scanner|
       scanner[2] if scanner.scan(/\\<(.)(.*?)\1>/)
@@ -567,9 +594,12 @@ describe MathML::Util::SimpleLaTeX do
     src = '$a$$$b$$\c\<.$d$.>'
     encoded, data = s.encode(src)
     expect(simplify_math(s.decode_partial(:math, encoded, data))).to eq(simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math>\001d0\001\001e0\001\001u0\001"))
-    expect(simplify_math(s.decode_partial(:dmath, encoded, data))).to eq(simplify_math("\001m0\001<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\001e0\001\001u0\001"))
-    expect(simplify_math(s.decode_partial(:escape, encoded, data))).to eq(simplify_math("\001m0\001\001d0\001c\001u0\001"))
-    expect(simplify_math(s.decode_partial(:user, encoded, data))).to eq(simplify_math("\001m0\001\001d0\001\001e0\001$d$"))
+    expect(simplify_math(s.decode_partial(:dmath, encoded, data)))
+      .to eq(simplify_math("\001m0\001<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math>\001e0\001\001u0\001"))
+    expect(simplify_math(s.decode_partial(:escape, encoded, data)))
+      .to eq(simplify_math("\001m0\001\001d0\001c\001u0\001"))
+    expect(simplify_math(s.decode_partial(:user, encoded, data)))
+      .to eq(simplify_math("\001m0\001\001d0\001\001e0\001$d$"))
 
     r = s.decode_partial(:math, encoded, data) do |item, opt|
       expect(opt[:type]).to eq(:math)
@@ -641,12 +671,20 @@ describe MathML::Util::SimpleLaTeX do
       s.parse_eqnarray(scanner[1]) if scanner.scan(MathML::Util::EQNARRAY_RE)
     end
     expect(encoded).to eq("test\n\001u0\001\nend\n")
-    expect(simplify_math(s.decode(encoded, data))).to eq(simplify_math("test\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mo stretchy='false'>=</mo></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mo stretchy='false'>=</mo></mtd><mtd><mi>d</mi></mtd></mtr></mtable></math>\nend\n"))
+    expect(simplify_math(s.decode(encoded, data)))
+      .to eq(simplify_math(
+               "test\n<math display='block' xmlns='http://www.w3.org/1998/Math/MathML'>" \
+               '<mtable>' \
+               "<mtr><mtd><mi>a</mi></mtd><mtd><mo stretchy='false'>=</mo></mtd><mtd><mi>b</mi></mtd></mtr>" \
+               "<mtr><mtd><mi>c</mi></mtd><mtd><mo stretchy='false'>=</mo></mtd><mtd><mi>d</mi></mtd></mtr>" \
+               "</mtable></math>\nend\n"
+             ))
 
     encoded, data = s.encode('\begin{eqnarray}a\end{eqnarray}', MathML::Util::EQNARRAY_RE) do |scanner|
       s.parse_eqnarray(scanner[1]) if scanner.scan(MathML::Util::EQNARRAY_RE)
     end
-    expect(s.decode(encoded, data)).to eq("<br />\nNeed more column.<br />\n<code>\\begin{eqnarray}a<strong>\\end{eqnarray}</strong></code><br />")
+    expect(s.decode(encoded, data))
+      .to eq("<br />\nNeed more column.<br />\n<code>\\begin{eqnarray}a<strong>\\end{eqnarray}</strong></code><br />")
   end
 
   it 'parses single command' do
@@ -666,7 +704,10 @@ describe MathML::Util::SimpleLaTeX do
       s.parse_single_command(scanner.matched) if scanner.scan(MathML::Util::SINGLE_COMMAND_RE)
     end
     expect(encoded).to eq("\001u0\001 test")
-    expect(simplify_math(s.decode(encoded, data))).to eq(simplify_math("<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math> test"))
+    expect(simplify_math(s.decode(encoded, data)))
+      .to eq(simplify_math(
+               "<math display='inline' xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math> test"
+             ))
 
     encoded, data = s.encode("\\alpha\ntest", MathML::Util::SINGLE_COMMAND_RE) do |scanner|
       s.parse_single_command(scanner.matched) if scanner.scan(MathML::Util::SINGLE_COMMAND_RE)

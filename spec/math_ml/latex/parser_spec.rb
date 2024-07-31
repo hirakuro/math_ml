@@ -151,7 +151,8 @@ describe MathML::LaTeX::Parser do
     end
 
     it 'processes underover' do
-      expect(smml('\sum_a^b', true)).to eq("<munderover><mo stretchy='false'>&sum;</mo><mi>a</mi><mi>b</mi></munderover>")
+      expect(smml('\sum_a^b',
+                  true)).to eq("<munderover><mo stretchy='false'>&sum;</mo><mi>a</mi><mi>b</mi></munderover>")
       expect(smml('\sum_a^b')).to eq("<msubsup><mo stretchy='false'>&sum;</mo><mi>a</mi><mi>b</mi></msubsup>")
       expect(smml('\sum_a', true)).to eq("<munder><mo stretchy='false'>&sum;</mo><mi>a</mi></munder>")
       expect(smml('\sum^a', true)).to eq("<mover><mo stretchy='false'>&sum;</mo><mi>a</mi></mover>")
@@ -165,19 +166,40 @@ describe MathML::LaTeX::Parser do
     end
 
     it 'processes font commands' do
-      expect(smml('a{\bf b c}d')).to eq("<mi>a</mi><mrow><mi mathvariant='bold'>b</mi><mi mathvariant='bold'>c</mi></mrow><mi>d</mi>")
-      expect(smml('\bf a{\it b c}d')).to eq("<mi mathvariant='bold'>a</mi><mrow><mi>b</mi><mi>c</mi></mrow><mi mathvariant='bold'>d</mi>")
-      expect(smml('a{\rm b c}d')).to eq("<mi>a</mi><mrow><mi mathvariant='normal'>b</mi><mi mathvariant='normal'>c</mi></mrow><mi>d</mi>")
+      expect(smml('a{\bf b c}d')).to eq(
+        "<mi>a</mi><mrow><mi mathvariant='bold'>b</mi><mi mathvariant='bold'>c</mi></mrow><mi>d</mi>"
+      )
+      expect(smml('\bf a{\it b c}d')).to eq(
+        "<mi mathvariant='bold'>a</mi><mrow><mi>b</mi><mi>c</mi></mrow><mi mathvariant='bold'>d</mi>"
+      )
+      expect(smml('a{\rm b c}d')).to eq(
+        "<mi>a</mi><mrow><mi mathvariant='normal'>b</mi><mi mathvariant='normal'>c</mi></mrow><mi>d</mi>"
+      )
 
-      expect(smml('a \mathbf{bc}d')).to eq("<mi>a</mi><mrow><mrow><mi mathvariant='bold'>b</mi><mi mathvariant='bold'>c</mi></mrow></mrow><mi>d</mi>")
+      expect(smml('a \mathbf{bc}d')).to eq(
+        "<mi>a</mi><mrow><mrow><mi mathvariant='bold'>b</mi><mi mathvariant='bold'>c</mi></mrow></mrow><mi>d</mi>"
+      )
       expect(smml('\mathbf12')).to eq("<mrow><mn mathvariant='bold'>1</mn></mrow><mn>2</mn>")
-      expect(smml('\bf a \mathit{bc} d')).to eq("<mi mathvariant='bold'>a</mi><mrow><mrow><mi>b</mi><mi>c</mi></mrow></mrow><mi mathvariant='bold'>d</mi>")
-      expect(smml('a\mathrm{bc}d')).to eq("<mi>a</mi><mrow><mrow><mi mathvariant='normal'>b</mi><mi mathvariant='normal'>c</mi></mrow></mrow><mi>d</mi>")
+      expect(smml('\bf a \mathit{bc} d')).to eq(
+        "<mi mathvariant='bold'>a</mi><mrow><mrow><mi>b</mi><mi>c</mi></mrow></mrow><mi mathvariant='bold'>d</mi>"
+      )
+      expect(smml('a\mathrm{bc}d')).to eq(
+        "<mi>a</mi><mrow><mrow><mi mathvariant='normal'>b</mi><mi mathvariant='normal'>c</mi></mrow></mrow><mi>d</mi>"
+      )
 
-      expect(smml('a \mathbb{b c} d')).to eq('<mi>a</mi><mrow><mrow><mi>&bopf;</mi><mi>&copf;</mi></mrow></mrow><mi>d</mi>')
-      expect(smml('a \mathscr{b c} d')).to eq('<mi>a</mi><mrow><mrow><mi>&bscr;</mi><mi>&cscr;</mi></mrow></mrow><mi>d</mi>')
-      expect(smml('a \mathfrak{b c} d')).to eq('<mi>a</mi><mrow><mrow><mi>&bfr;</mi><mi>&cfr;</mi></mrow></mrow><mi>d</mi>')
-      expect(smml('a \bm{bc}d')).to eq("<mi>a</mi><mrow><mrow><mi mathvariant='bold-italic'>b</mi><mi mathvariant='bold-italic'>c</mi></mrow></mrow><mi>d</mi>")
+      expect(smml('a \mathbb{b c} d')).to eq(
+        '<mi>a</mi><mrow><mrow><mi>&bopf;</mi><mi>&copf;</mi></mrow></mrow><mi>d</mi>'
+      )
+      expect(smml('a \mathscr{b c} d')).to eq(
+        '<mi>a</mi><mrow><mrow><mi>&bscr;</mi><mi>&cscr;</mi></mrow></mrow><mi>d</mi>'
+      )
+      expect(smml('a \mathfrak{b c} d')).to eq(
+        '<mi>a</mi><mrow><mrow><mi>&bfr;</mi><mi>&cfr;</mi></mrow></mrow><mi>d</mi>'
+      )
+      expect(smml('a \bm{bc}d')).to eq(
+        "<mi>a</mi><mrow><mrow><mi mathvariant='bold-italic'>b</mi>" \
+        "<mi mathvariant='bold-italic'>c</mi></mrow></mrow><mi>d</mi>"
+      )
       expect(smml('\bm ab')).to eq("<mrow><mi mathvariant='bold-italic'>a</mi></mrow><mi>b</mi>")
 
       expect { smml('\mathit') }.to raise_parse_error('Syntax error.', '\mathit', '')
@@ -203,69 +225,115 @@ describe MathML::LaTeX::Parser do
     it 'processes environment' do
       expect { smml('{\begin}rest') }.to raise_parse_error('Environment name not exist.', '{\begin', '}rest')
 
-      expect { smml('{\begin{array}{c}dummy}rest') }.to raise_parse_error('Matching \end not exist.', '{\begin{array}{c}dummy', '}rest')
+      expect do
+        smml('{\begin{array}{c}dummy}rest')
+      end.to raise_parse_error('Matching \end not exist.', '{\begin{array}{c}dummy',
+                               '}rest')
 
-      expect { smml('\begin{array}c dummy\end{test}') }.to raise_parse_error('Environment mismatched.', '\begin{array}c dummy\end', '{test}')
+      expect do
+        smml('\begin{array}c dummy\end{test}')
+      end.to raise_parse_error('Environment mismatched.', '\begin{array}c dummy\end',
+                               '{test}')
 
-      expect { smml('\left(\begin{array}\right)') }.to raise_parse_error('Syntax error.', '\left(\begin{array}', '\right)')
+      expect do
+        smml('\left(\begin{array}\right)')
+      end.to raise_parse_error('Syntax error.', '\left(\begin{array}', '\right)')
     end
 
     it 'processes array' do
-      expect(smml('\begin{array}{lrc} a & b & c \\\\ d & e & f \\\\ \end{array}')).to eq("<mtable columnalign='left right center'><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd></mtr><mtr><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd><mtd><mi>f</mi></mtd></mtr></mtable>")
+      expect(smml('\begin{array}{lrc} a & b & c \\\\ d & e & f \\\\ \end{array}')).to eq(
+        "<mtable columnalign='left right center'>" \
+        '<mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd></mtr>' \
+        '<mtr><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd><mtd><mi>f</mi></mtd></mtr></mtable>'
+      )
 
-      expect(smml('\begin{array}{lrc}a&b&c\\\\d&e&f \end{array}')).to eq("<mtable columnalign='left right center'><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd></mtr><mtr><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd><mtd><mi>f</mi></mtd></mtr></mtable>")
+      expect(smml('\begin{array}{lrc}a&b&c\\\\d&e&f \end{array}')).to eq(
+        "<mtable columnalign='left right center'>" \
+        '<mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd></mtr>' \
+        '<mtr><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd><mtd><mi>f</mi></mtd></mtr></mtable>'
+      )
 
       expect(smml('\begin{array}{c}\end{array}')).to eq('<mtable />')
 
       expect { smml('\begin{array}\end{array}') }.to raise_parse_error('Syntax error.', '\begin{array}', '\end{array}')
 
-      expect { smml('\begin{array}{a}\end{array}') }.to raise_parse_error('Syntax error.', '\begin{array}{', 'a}\end{array}')
+      expect do
+        smml('\begin{array}{a}\end{array}')
+      end.to raise_parse_error('Syntax error.', '\begin{array}{', 'a}\end{array}')
 
-      expect { smml('\begin{array}{cc}a\\\\b&c\end{array}') }.to raise_parse_error('Need more column.', '\begin{array}{cc}a', '\\\\b&c\end{array}')
+      expect do
+        smml('\begin{array}{cc}a\\\\b&c\end{array}')
+      end.to raise_parse_error('Need more column.', '\begin{array}{cc}a',
+                               '\\\\b&c\end{array}')
 
-      expect { smml('\begin{array}{cc}a\end{array}') }.to raise_parse_error('Need more column.', '\begin{array}{cc}a', '\end{array}')
+      expect do
+        smml('\begin{array}{cc}a\end{array}')
+      end.to raise_parse_error('Need more column.', '\begin{array}{cc}a', '\end{array}')
 
-      expect { smml('\begin{array}{c}a&\end{array}') }.to raise_parse_error('Too many column.', '\begin{array}{c}a', '&\end{array}')
+      expect do
+        smml('\begin{array}{c}a&\end{array}')
+      end.to raise_parse_error('Too many column.', '\begin{array}{c}a', '&\end{array}')
 
       expect(smml('\begin{array}{cc}&\end{array}')).to eq('<mtable><mtr><mtd /><mtd /></mtr></mtable>')
 
-      expect(math_ml('\left\{\begin{array}ca_b\end{array}\right\}')[0]).to match(EimXML::DSL.element(:mfenced, open: '{', close: '}') do
-        element :mrow do
-          element :mtable do
-            element :mtr do
-              element :mtd do
-                element :msub do
-                  element(:mi).add('a')
-                  element(:mi).add('b')
+      expect(math_ml('\left\{\begin{array}ca_b\end{array}\right\}')[0])
+        .to match(EimXML::DSL.element(:mfenced, open: '{', close: '}') do
+          element :mrow do
+            element :mtable do
+              element :mtr do
+                element :mtd do
+                  element :msub do
+                    element(:mi).add('a')
+                    element(:mi).add('b')
+                  end
                 end
               end
             end
           end
-        end
-      end)
+        end)
 
-      expect(smml('\begin{array}{@{a_1}l@bc@cr@d}A&B&C\end{array}')).to eq("<mtable columnalign='center left center center center right center'><mtr><mtd><mrow><msub><mi>a</mi><mn>1</mn></msub></mrow></mtd><mtd><mi>A</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>B</mi></mtd><mtd><mi>c</mi></mtd><mtd><mi>C</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable>")
+      expect(smml('\begin{array}{@{a_1}l@bc@cr@d}A&B&C\end{array}')).to eq(
+        "<mtable columnalign='center left center center center right center'>" \
+        '<mtr><mtd><mrow><msub><mi>a</mi><mn>1</mn></msub></mrow></mtd>' \
+        '<mtd><mi>A</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>B</mi></mtd><mtd><mi>c</mi></mtd><mtd><mi>C</mi></mtd>' \
+        '<mtd><mi>d</mi></mtd></mtr></mtable>'
+      )
 
-      expect(math_ml('\left\{\begin{array}ca_b\end{array}\right\}')[0]).to match(EimXML::DSL.element(:mfenced, open: '{', close: '}') do
-        element :mrow do
-          element :mtable do
-            element :mtr do
-              element :mtd do
-                element :msub do
-                  element(:mi).add('a')
-                  element(:mi).add('b')
+      expect(math_ml('\left\{\begin{array}ca_b\end{array}\right\}')[0])
+        .to match(EimXML::DSL.element(:mfenced, open: '{', close: '}') do
+          element :mrow do
+            element :mtable do
+              element :mtr do
+                element :mtd do
+                  element :msub do
+                    element(:mi).add('a')
+                    element(:mi).add('b')
+                  end
                 end
               end
             end
           end
-        end
-      end)
+        end)
 
-      expect(smml('\begin{array}{c|c}a&b\\\\c&d\end{array}')).to eq("<mtable columnlines='solid'><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable>")
-      expect(smml('\begin{array}{|c|}a\\\\c\end{array}')).to eq("<mtable columnlines='solid solid'><mtr><mtd /><mtd><mi>a</mi></mtd><mtd /></mtr><mtr><mtd /><mtd><mi>c</mi></mtd><mtd /></mtr></mtable>")
-      expect(smml('\begin{array}{c}\hline c\end{array}')).to eq("<mtable rowlines='solid'><mtr /><mtr><mtd><mi>c</mi></mtd></mtr></mtable>")
-      expect(smml('\begin{array}{c@acc}c&c&c\\\\\hline\end{array}')).to eq("<mtable rowlines='solid'><mtr><mtd><mi>c</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>c</mi></mtd><mtd><mi>c</mi></mtd></mtr><mtr><mtd /><mtd /><mtd /><mtd /></mtr></mtable>")
-      expect(smml('\begin{array}{c}\hline a\\\\b\\\\\hline\end{array}')).to eq("<mtable rowlines='solid none solid'><mtr /><mtr><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>b</mi></mtd></mtr><mtr><mtd /></mtr></mtable>")
+      expect(smml('\begin{array}{c|c}a&b\\\\c&d\end{array}')).to eq(
+        "<mtable columnlines='solid'><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr>" \
+        '<mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable>'
+      )
+      expect(smml('\begin{array}{|c|}a\\\\c\end{array}')).to eq(
+        "<mtable columnlines='solid solid'><mtr><mtd /><mtd><mi>a</mi></mtd><mtd /></mtr>" \
+        '<mtr><mtd /><mtd><mi>c</mi></mtd><mtd /></mtr></mtable>'
+      )
+      expect(smml('\begin{array}{c}\hline c\end{array}')).to eq(
+        "<mtable rowlines='solid'><mtr /><mtr><mtd><mi>c</mi></mtd></mtr></mtable>"
+      )
+      expect(smml('\begin{array}{c@acc}c&c&c\\\\\hline\end{array}')).to eq(
+        "<mtable rowlines='solid'><mtr><mtd><mi>c</mi></mtd><mtd><mi>a</mi></mtd><mtd><mi>c</mi></mtd>" \
+        '<mtd><mi>c</mi></mtd></mtr><mtr><mtd /><mtd /><mtd /><mtd /></mtr></mtable>'
+      )
+      expect(smml('\begin{array}{c}\hline a\\\\b\\\\\hline\end{array}')).to eq(
+        "<mtable rowlines='solid none solid'><mtr /><mtr><mtd><mi>a</mi></mtd></mtr>" \
+        '<mtr><mtd><mi>b</mi></mtd></mtr><mtr><mtd /></mtr></mtable>'
+      )
     end
 
     it 'parses \left and \right' do
@@ -278,11 +346,16 @@ describe MathML::LaTeX::Parser do
         end
       end)
 
-      expect(math_ml('\left \lfloor a\right \rfloor')[0]).to match(EimXML::DSL.element(:mfenced, open: EimXML::PCString.new('&lfloor;', true), close: EimXML::PCString.new('&rfloor;', true)) do
-        element :mrow do
-          element(:mi).add('a')
-        end
-      end)
+      expect(math_ml('\left \lfloor a\right \rfloor')[0])
+        .to match(EimXML::DSL.element(
+          :mfenced,
+          open: EimXML::PCString.new('&lfloor;', true),
+          close: EimXML::PCString.new('&rfloor;', true)
+        ) do
+          element :mrow do
+            element(:mi).add('a')
+          end
+        end)
 
       expect(math_ml('\left \{ a \right \}')[0]).to match(EimXML::DSL.element(:mfenced, open: '{', close: '}') do
         element :mrow do
@@ -290,23 +363,24 @@ describe MathML::LaTeX::Parser do
         end
       end)
 
-      expect(math_ml('\left\{\begin{array}c\begin{array}ca\end{array}\end{array}\right\}')[0]).to match(EimXML::DSL.element(:mfenced, open: '{', close: '}') do
-        element :mrow do
-          element :mtable do
-            element :mtr do
-              element :mtd do
-                element :mtable do
-                  element :mtr do
-                    element :mtd do
-                      element(:mi).add('a')
+      expect(math_ml('\left\{\begin{array}c\begin{array}ca\end{array}\end{array}\right\}')[0])
+        .to match(EimXML::DSL.element(:mfenced, open: '{', close: '}') do
+          element :mrow do
+            element :mtable do
+              element :mtr do
+                element :mtd do
+                  element :mtable do
+                    element :mtr do
+                      element :mtd do
+                        element(:mi).add('a')
+                      end
                     end
                   end
                 end
               end
             end
           end
-        end
-      end)
+        end)
 
       expect(math_ml('\left(\sum_a\right)')[0]).to match(EimXML::DSL.element(:mfenced, open: '(', close: ')') do
         element :mrow do
@@ -328,11 +402,16 @@ describe MathML::LaTeX::Parser do
 
       expect { smml('\left(test') }.to raise_parse_error('Brace not closed.', '\left', '(test')
 
-      expect(math_ml('\left\|a\right\|')[0]).to match(EimXML::DSL.element(:mfenced, open: EimXML::PCString.new('&DoubleVerticalBar;', true), close: EimXML::PCString.new('&DoubleVerticalBar;', true)) do
-        element :mrow do
-          element(:mi).add('a')
-        end
-      end)
+      expect(math_ml('\left\|a\right\|')[0])
+        .to match(EimXML::DSL.element(
+          :mfenced,
+          open: EimXML::PCString.new('&DoubleVerticalBar;', true),
+          close: EimXML::PCString.new('&DoubleVerticalBar;', true)
+        ) do
+          element :mrow do
+            element(:mi).add('a')
+          end
+        end)
 
       expect { smml('\left') }.to raise_parse_error('Need brace here.', '\left', '')
     end
@@ -350,7 +429,9 @@ describe MathML::LaTeX::Parser do
     end
 
     it 'parses stackrel' do
-      expect(smml('\stackrel\to=')).to eq("<mover><mo stretchy='false'>=</mo><mo stretchy='false'>&rightarrow;</mo></mover>")
+      expect(smml('\stackrel\to=')).to eq(
+        "<mover><mo stretchy='false'>=</mo><mo stretchy='false'>&rightarrow;</mo></mover>"
+      )
       expect(smml('\stackrel12')).to eq('<mover><mn>2</mn><mn>1</mn></mover>')
     end
 
@@ -360,13 +441,17 @@ describe MathML::LaTeX::Parser do
 
     it 'parses entity' do
       p = new_parser
-      expect { smml('\entity{therefore}', false, p) }.to raise_parse_error('Unregistered entity.', '\entity{', 'therefore}')
+      expect do
+        smml('\entity{therefore}', false, p)
+      end.to raise_parse_error('Unregistered entity.', '\entity{', 'therefore}')
 
       p.unsecure_entity = true
       expect(smml('\entity{therefore}', false, p)).to eq('<mo>&therefore;</mo>')
 
       p.unsecure_entity = false
-      expect { smml('\entity{therefore}', false, p) }.to raise_parse_error('Unregistered entity.', '\entity{', 'therefore}')
+      expect do
+        smml('\entity{therefore}', false, p)
+      end.to raise_parse_error('Unregistered entity.', '\entity{', 'therefore}')
 
       p.add_entity(['therefore'])
       expect(smml('\entity{therefore}', false, p)).to eq('<mo>&therefore;</mo>')
@@ -393,19 +478,26 @@ describe MathML::LaTeX::Parser do
       expect(smml('\ROOT{12}{34}', false, p)).to eq('<mroot><mn>3</mn><mn>12</mn></mroot><mn>4</mn>')
       expect { smml('\root', false, p) }.to raise_parse_error('Error in macro(Need more parameter. "").', '', '\root')
 
-      expect(math_ml('\begin{braced}{|}{)}\frac12\end{braced}', false, p)[0]).to match(EimXML::DSL.element(:mfenced, open: '|', close: ')') do
-        element(:mrow) do
-          element(:mfrac) do
-            element(:mn).add('1')
-            element(:mn).add('2')
+      expect(math_ml('\begin{braced}{|}{)}\frac12\end{braced}', false, p)[0])
+        .to match(EimXML::DSL.element(:mfenced, open: '|', close: ')') do
+          element(:mrow) do
+            element(:mfrac) do
+              element(:mn).add('1')
+              element(:mn).add('2')
+            end
           end
-        end
-      end)
+        end)
 
-      expect(smml('\begin{sq}{12}{34}a\end{sq}', false, p)).to eq('<mroot><mrow><mn>12</mn></mrow><mn>34</mn></mroot><mi>a</mi><msqrt><mn>3</mn></msqrt><mn>4</mn>')
+      expect(smml('\begin{sq}{12}{34}a\end{sq}', false, p))
+        .to eq('<mroot><mrow><mn>12</mn></mrow><mn>34</mn></mroot><mi>a</mi><msqrt><mn>3</mn></msqrt><mn>4</mn>')
       expect { smml('\begin{braced}', false, p) }.to raise_parse_error('Need more parameter.', '\begin{braced}', '')
-      expect { smml('\begin{braced}123', false, p) }.to raise_parse_error('Matching \end not exist.', '\begin{braced}', '123')
-      expect { smml('\begin{braced}123\end{brace}', false, p) }.to raise_parse_error('Environment mismatched.', '\begin{braced}123\end', '{brace}')
+      expect do
+        smml('\begin{braced}123', false, p)
+      end.to raise_parse_error('Matching \end not exist.', '\begin{braced}', '123')
+      expect do
+        smml('\begin{braced}123\end{brace}', false,
+             p)
+      end.to raise_parse_error('Environment mismatched.', '\begin{braced}123\end', '{brace}')
       expect(smml('\R', false, p)).to eq('<mrow><mi>&Ropf;</mi></mrow>')
       expect(smml('\begin{BB}\end{BB}', false, p)).to eq('<mrow><mi>&Aopf;</mi></mrow><mrow><mi>&Bopf;</mi></mrow>')
     end
@@ -437,8 +529,14 @@ describe MathML::LaTeX::Parser do
       expect { smml('\C', false, ps) }.to raise_parse_error('Error in macro(Undefined command. "\dummy").', '', '\C')
       expect { smml('\C', false, ps) }.to raise_parse_error('Error in macro(Undefined command. "\dummy").', '', '\C')
 
-      expect { smml('\begin{E}\end{E}', false, ps) }.to raise_parse_error('Error in macro(Undefined command. "\dummy").', '', '\begin{E}\end{E}')
-      expect { smml('\begin{E}\end{E}', false, ps) }.to raise_parse_error('Error in macro(Undefined command. "\dummy").', '', '\begin{E}\end{E}')
+      expect do
+        smml('\begin{E}\end{E}', false,
+             ps)
+      end.to raise_parse_error('Error in macro(Undefined command. "\dummy").', '', '\begin{E}\end{E}')
+      expect do
+        smml('\begin{E}\end{E}', false,
+             ps)
+      end.to raise_parse_error('Error in macro(Undefined command. "\dummy").', '', '\begin{E}\end{E}')
     end
 
     it 'can be used with macro with option' do
@@ -464,19 +562,43 @@ describe MathML::LaTeX::Parser do
     end
 
     it 'parses matrix environment' do
-      expect(smml('\begin{matrix}&&\\\\&\end{matrix}')).to eq('<mtable><mtr><mtd /><mtd /><mtd /></mtr><mtr><mtd /><mtd /></mtr></mtable>')
-      expect { smml('\begin{matrix}&&\\\\&\end{mat}') }.to raise_parse_error('Environment mismatched.', '\begin{matrix}&&\\\\&\end', '{mat}')
-      expect { smml('\begin{matrix}&&\\\\&') }.to raise_parse_error('Matching \\end not exist.', '\begin{matrix}&&\\\\&', '')
-      expect(smml('\begin{matrix}\begin{matrix}a&b\\\\c&d\end{matrix}&1\\\\0&1\\\\\end{matrix}')).to eq('<mtable><mtr><mtd><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable></mtd><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable>')
+      expect(smml('\begin{matrix}&&\\\\&\end{matrix}')).to eq(
+        '<mtable><mtr><mtd /><mtd /><mtd /></mtr><mtr><mtd /><mtd /></mtr></mtable>'
+      )
+      expect do
+        smml('\begin{matrix}&&\\\\&\end{mat}')
+      end.to raise_parse_error(
+        'Environment mismatched.',
+        '\begin{matrix}&&\\\\&\end',
+        '{mat}'
+      )
+
+      expect do
+        smml('\begin{matrix}&&\\\\&')
+      end.to raise_parse_error('Matching \\end not exist.', '\begin{matrix}&&\\\\&', '')
+      expect(smml('\begin{matrix}\begin{matrix}a&b\\\\c&d\end{matrix}&1\\\\0&1\\\\\end{matrix}')).to eq(
+        '<mtable><mtr><mtd><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr>' \
+        '<mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable></mtd><mtd><mn>1</mn></mtd></mtr>' \
+        '<mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable>'
+      )
       expect(smml('\begin{matrix}\end{matrix}')).to eq('<mtable />')
-      expect(smml('\begin{matrix}\hline a\\\\b\\\\\hline\end{matrix}')).to eq("<mtable rowlines='solid none solid'><mtr /><mtr><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>b</mi></mtd></mtr><mtr /></mtable>")
+      expect(smml('\begin{matrix}\hline a\\\\b\\\\\hline\end{matrix}')).to eq(
+        "<mtable rowlines='solid none solid'><mtr /><mtr><mtd><mi>a</mi></mtd></mtr>" \
+        '<mtr><mtd><mi>b</mi></mtd></mtr><mtr /></mtable>'
+      )
 
       expect(smml('\begin{smallmatrix}\end{smallmatrix}')).to eq('<mtable />')
       expect(math_ml('\begin{pmatrix}\end{pmatrix}')[0]).to match(EimXML::Element.new(:mfenced, open: '(', close: ')'))
       expect(math_ml('\begin{bmatrix}\end{bmatrix}')[0]).to match(EimXML::Element.new(:mfenced, open: '[', close: ']'))
       expect(math_ml('\begin{Bmatrix}\end{Bmatrix}')[0]).to match(EimXML::Element.new(:mfenced, open: '{', close: '}'))
       expect(math_ml('\begin{vmatrix}\end{vmatrix}')[0]).to match(EimXML::Element.new(:mfenced, open: '|', close: '|'))
-      expect(math_ml('\begin{Vmatrix}\end{Vmatrix}')[0]).to match(EimXML::Element.new(:mfenced, open: EimXML::PCString.new('&DoubleVerticalBar;', true), close: EimXML::PCString.new('&DoubleVerticalBar;', true)))
+      expect(math_ml('\begin{Vmatrix}\end{Vmatrix}')[0]).to match(
+        EimXML::Element.new(
+          :mfenced,
+          open: EimXML::PCString.new('&DoubleVerticalBar;', true),
+          close: EimXML::PCString.new('&DoubleVerticalBar;', true)
+        )
+      )
     end
 
     it 'parses symbols' do
@@ -488,17 +610,32 @@ describe MathML::LaTeX::Parser do
     it 'character reference' do
       @parser = MathML::LaTeX::Parser.new(symbol: MathML::Symbol::CharacterReference)
       expect(smml('\alpha')).to eq('<mi>&#x3b1;</mi>')
-      expect(smml('\mathbb{abcABC}')).to eq('<mrow><mrow><mi>&#x1d552;</mi><mi>&#x1d553;</mi><mi>&#x1d554;</mi><mi>&#x1d538;</mi><mi>&#x1d539;</mi><mi>&#x2102;</mi></mrow></mrow>')
-      expect(smml('\mathscr{abcABC}')).to eq('<mrow><mrow><mi>&#x1d4b6;</mi><mi>&#x1d4b7;</mi><mi>&#x1d4b8;</mi><mi>&#x1d49c;</mi><mi>&#x212c;</mi><mi>&#x1d49e;</mi></mrow></mrow>')
-      expect(smml('\mathfrak{abcABC}')).to eq('<mrow><mrow><mi>&#x1d51e;</mi><mi>&#x1d51f;</mi><mi>&#x1d520;</mi><mi>&#x1d504;</mi><mi>&#x1d505;</mi><mi>&#x212d;</mi></mrow></mrow>')
+      expect(smml('\mathbb{abcABC}')).to eq(
+        '<mrow><mrow><mi>&#x1d552;</mi><mi>&#x1d553;</mi><mi>&#x1d554;</mi><mi>&#x1d538;</mi><mi>&#x1d539;</mi>' \
+        '<mi>&#x2102;</mi></mrow></mrow>'
+      )
+      expect(smml('\mathscr{abcABC}')).to eq(
+        '<mrow><mrow><mi>&#x1d4b6;</mi><mi>&#x1d4b7;</mi><mi>&#x1d4b8;</mi><mi>&#x1d49c;</mi><mi>&#x212c;</mi>' \
+        '<mi>&#x1d49e;</mi></mrow></mrow>'
+      )
+      expect(smml('\mathfrak{abcABC}')).to eq(
+        '<mrow><mrow><mi>&#x1d51e;</mi><mi>&#x1d51f;</mi><mi>&#x1d520;</mi><mi>&#x1d504;</mi><mi>&#x1d505;</mi>' \
+        '<mi>&#x212d;</mi></mrow></mrow>'
+      )
     end
 
     it 'utf8' do
       @parser = MathML::LaTeX::Parser.new(symbol: MathML::Symbol::UTF8)
       expect(smml('\alpha')).to eq('<mi>α</mi>')
-      expect(smml('\mathbb{abcABC}')).to eq('<mrow><mrow><mi>𝕒</mi><mi>𝕓</mi><mi>𝕔</mi><mi>𝔸</mi><mi>𝔹</mi><mi>ℂ</mi></mrow></mrow>')
-      expect(smml('\mathscr{abcABC}')).to eq('<mrow><mrow><mi>𝒶</mi><mi>𝒷</mi><mi>𝒸</mi><mi>𝒜</mi><mi>ℬ</mi><mi>𝒞</mi></mrow></mrow>')
-      expect(smml('\mathfrak{abcABC}')).to eq('<mrow><mrow><mi>𝔞</mi><mi>𝔟</mi><mi>𝔠</mi><mi>𝔄</mi><mi>𝔅</mi><mi>ℭ</mi></mrow></mrow>')
+      expect(smml('\mathbb{abcABC}')).to eq(
+        '<mrow><mrow><mi>𝕒</mi><mi>𝕓</mi><mi>𝕔</mi><mi>𝔸</mi><mi>𝔹</mi><mi>ℂ</mi></mrow></mrow>'
+      )
+      expect(smml('\mathscr{abcABC}')).to eq(
+        '<mrow><mrow><mi>𝒶</mi><mi>𝒷</mi><mi>𝒸</mi><mi>𝒜</mi><mi>ℬ</mi><mi>𝒞</mi></mrow></mrow>'
+      )
+      expect(smml('\mathfrak{abcABC}')).to eq(
+        '<mrow><mrow><mi>𝔞</mi><mi>𝔟</mi><mi>𝔠</mi><mi>𝔄</mi><mi>𝔅</mi><mi>ℭ</mi></mrow></mrow>'
+      )
     end
   end
 

@@ -110,7 +110,7 @@ Metrics/CyclomaticComplexity:
 # Offense count: 45
 # Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
 Metrics/MethodLength:
-  Max: 65
+  Max: 70
 
 # Offense count: 7
 # Configuration parameters: CountComments, CountAsOne.
@@ -221,7 +221,7 @@ RSpec/DescribedClass:
 # Offense count: 65
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:
-  Max: 58
+  Max: 88
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
@@ -527,10 +527,3 @@ Style/ZeroLengthPredicate:
     - 'lib/math_ml/latex.rb'
     - 'lib/math_ml/util.rb'
     - 'symbols/fetch_symbol.rb'
-
-# Offense count: 100
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns.
-# URISchemes: http, https
-Layout/LineLength:
-  Max: 359

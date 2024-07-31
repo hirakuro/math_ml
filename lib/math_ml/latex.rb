@@ -223,7 +223,10 @@ module MathML
 
       def scan_num_of_parameter
         if @scanner.scan_option
-          raise parse_error('Need positive number.', @scanner[1] + ']') unless @scanner[1] =~ /\A#{RE::SPACE}*\d+#{RE::SPACE}*\z/
+          unless @scanner[1] =~ /\A#{RE::SPACE}*\d+#{RE::SPACE}*\z/
+            raise parse_error('Need positive number.',
+                              @scanner[1] + ']')
+          end
 
           @scanner[1].to_i
         else
@@ -893,7 +896,10 @@ module MathML
               body << @scanner.scan_any(true)
             end
             @scanner.scan_command
-            raise ParseError.new('Environment mismatched.', @scanner.matched) unless en == (@scanner.scan_block ? @scanner[1] : @scanner.scan_any)
+            unless en == (@scanner.scan_block ? @scanner[1] : @scanner.scan_any)
+              raise ParseError.new('Environment mismatched.',
+                                   @scanner.matched)
+            end
 
             begin
               return parse_into(@macro.expand_environment(en, body, params, option), [])
@@ -974,7 +980,12 @@ module MathML
         columned = false
         until l.eos?
           c = l.scan_any
-          raise ParseError.new('Syntax error.', layout[/\A.*(#{Regexp.escape(c + l.rest)}.*\z)/m, 1]) unless c =~ /[clr|@]/
+          unless c =~ /[clr|@]/
+            raise ParseError.new(
+              'Syntax error.',
+              layout[/\A.*(#{Regexp.escape(c + l.rest)}.*\z)/m, 1]
+            )
+          end
 
           if c == '|'
             aligns << Align::CENTER if vlined
@@ -1064,7 +1075,8 @@ module MathML
               raise ParseError.new('Need more column.', @scanner.matched.to_s) unless @scanner.scan(/&/)
             end
             r << push_container(Td.new) do |td|
-              td << parse_to_element(true) until @scanner.peek_command == 'end' || @scanner.check(/(&|\\\\)/) || @scanner.eos?
+              td << parse_to_element(true) until @scanner.peek_command == 'end' ||
+                                                 @scanner.check(/(&|\\\\)/) || @scanner.eos?
             end
           end
         end
@@ -1094,7 +1106,8 @@ module MathML
             r << (td = Td.new)
             until @scanner.check(RE::WBSLASH) || @scanner.peek_command == 'end' || @scanner.eos?
               push_container(td) do |e|
-                e << parse_to_element(true) until @scanner.peek_command == 'end' || @scanner.check(/(&|\\\\)/) || @scanner.eos?
+                e << parse_to_element(true) until @scanner.peek_command == 'end' ||
+                                                  @scanner.check(/(&|\\\\)/) || @scanner.eos?
               end
               r << (td = Td.new) if @scanner.scan(/&/)
             end
@@ -1120,7 +1133,8 @@ module MathML
         r = Tr.new
         until @scanner.check(RE::WBSLASH) || @scanner.peek_command == 'end'
           r << push_container(Td.new) do |td|
-            td << parse_to_element(true) until @scanner.peek_command == 'end' || @scanner.check(/(&|\\\\)/) || @scanner.eos?
+            td << parse_to_element(true) until @scanner.peek_command == 'end' ||
+                                               @scanner.check(/(&|\\\\)/) || @scanner.eos?
           end
         end
       end

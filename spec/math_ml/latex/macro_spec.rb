@@ -29,35 +29,96 @@ describe MathML::LaTeX::Macro do
     expect { @m.parse(@src) }.not_to raise_error
 
     @m = MathML::LaTeX::Macro.new
-    expect { @m.parse('\newcommand{notcommand}{}') }.to raise_parse_error('Need newcommand.', '\\newcommand{', 'notcommand}{}')
-    expect { @m.parse('\newcommand{\separated command}{}') }.to raise_parse_error('Syntax error.', '\newcommand{\separated', ' command}{}')
+    expect do
+      @m.parse('\newcommand{notcommand}{}')
+    end.to raise_parse_error('Need newcommand.', '\\newcommand{', 'notcommand}{}')
+    expect do
+      @m.parse('\newcommand{\separated command}{}')
+    end.to raise_parse_error('Syntax error.', '\newcommand{\separated',
+                             ' command}{}')
     expect { @m.parse('\newcommand{\nobody}') }.to raise_parse_error('Need parameter.', '\newcommand{\nobody}', '')
-    expect { @m.parse('\newcommand{\noparam}{#1}') }.to raise_parse_error("Parameter \# too large.", '\newcommand{\noparam}{#', '1}')
-    expect { @m.parse('\newcommand{\overopt}[1]{#1#2}') }.to raise_parse_error("Parameter \# too large.", '\newcommand{\overopt}[1]{#1#', '2}')
-    expect { @m.parse('\newcommand{\strangeopt}[-1]') }.to raise_parse_error('Need positive number.', '\newcommand{\strangeopt}[', '-1]')
-    expect { @m.parse('\newcommand{\strangeopt}[a]') }.to raise_parse_error('Need positive number.', '\newcommand{\strangeopt}[', 'a]')
+    expect do
+      @m.parse('\newcommand{\noparam}{#1}')
+    end.to raise_parse_error("Parameter \# too large.", '\newcommand{\noparam}{#',
+                             '1}')
+    expect do
+      @m.parse('\newcommand{\overopt}[1]{#1#2}')
+    end.to raise_parse_error("Parameter \# too large.",
+                             '\newcommand{\overopt}[1]{#1#', '2}')
+    expect do
+      @m.parse('\newcommand{\strangeopt}[-1]')
+    end.to raise_parse_error('Need positive number.', '\newcommand{\strangeopt}[',
+                             '-1]')
+    expect do
+      @m.parse('\newcommand{\strangeopt}[a]')
+    end.to raise_parse_error('Need positive number.', '\newcommand{\strangeopt}[',
+                             'a]')
 
-    expect { @m.parse('\newenvironment{\command}{}{}') }.to raise_parse_error('Syntax error.', '\newenvironment{', '\command}{}{}')
-    expect { @m.parse('\newenvironment{nobegin}') }.to raise_parse_error('Need begin block.', '\newenvironment{nobegin}', '')
-    expect { @m.parse('\newenvironment{noend}{}') }.to raise_parse_error('Need end block.', '\newenvironment{noend}{}', '')
-    expect { @m.parse('\newenvironment{noparam}{#1}{}') }.to raise_parse_error("Parameter \# too large.", '\newenvironment{noparam}{#', '1}{}')
-    expect { @m.parse('\newenvironment{overparam}[1]{#1#2}{}') }.to raise_parse_error("Parameter \# too large.", '\newenvironment{overparam}[1]{#1#', '2}{}')
-    expect { @m.parse('\newenvironment{strangeparam}[-1]{}{}') }.to raise_parse_error('Need positive number.', '\newenvironment{strangeparam}[', '-1]{}{}')
-    expect { @m.parse('\newenvironment{strangeparam}[a]{}{}') }.to raise_parse_error('Need positive number.', '\newenvironment{strangeparam}[', 'a]{}{}')
+    expect do
+      @m.parse('\newenvironment{\command}{}{}')
+    end.to raise_parse_error('Syntax error.', '\newenvironment{', '\command}{}{}')
+    expect do
+      @m.parse('\newenvironment{nobegin}')
+    end.to raise_parse_error('Need begin block.', '\newenvironment{nobegin}', '')
+    expect do
+      @m.parse('\newenvironment{noend}{}')
+    end.to raise_parse_error('Need end block.', '\newenvironment{noend}{}', '')
+    expect do
+      @m.parse('\newenvironment{noparam}{#1}{}')
+    end.to raise_parse_error("Parameter \# too large.",
+                             '\newenvironment{noparam}{#', '1}{}')
+    expect do
+      @m.parse('\newenvironment{overparam}[1]{#1#2}{}')
+    end.to raise_parse_error("Parameter \# too large.",
+                             '\newenvironment{overparam}[1]{#1#', '2}{}')
+    expect do
+      @m.parse('\newenvironment{strangeparam}[-1]{}{}')
+    end.to raise_parse_error('Need positive number.',
+                             '\newenvironment{strangeparam}[', '-1]{}{}')
+    expect do
+      @m.parse('\newenvironment{strangeparam}[a]{}{}')
+    end.to raise_parse_error('Need positive number.',
+                             '\newenvironment{strangeparam}[', 'a]{}{}')
 
-    expect { @m.parse('\newcommand{\valid}{OK} \invalid{\test}{NG}') }.to raise_parse_error('Syntax error.', '\newcommand{\valid}{OK} ', '\invalid{\test}{NG}')
-    expect { @m.parse('\newcommand{\valid}{OK} invalid{\test}{NG}') }.to raise_parse_error('Syntax error.', '\newcommand{\valid}{OK} ', 'invalid{\test}{NG}')
+    expect do
+      @m.parse('\newcommand{\valid}{OK} \invalid{\test}{NG}')
+    end.to raise_parse_error('Syntax error.',
+                             '\newcommand{\valid}{OK} ', '\invalid{\test}{NG}')
+    expect do
+      @m.parse('\newcommand{\valid}{OK} invalid{\test}{NG}')
+    end.to raise_parse_error('Syntax error.',
+                             '\newcommand{\valid}{OK} ', 'invalid{\test}{NG}')
 
-    expect { @m.parse('\newcommand{\newcom}[test') }.to raise_parse_error('Option not closed.', '\newcommand{\newcom}', '[test')
-    expect { @m.parse('\newcommand{\newcom}[1][test') }.to raise_parse_error('Option not closed.', '\newcommand{\newcom}[1]', '[test')
-    expect { @m.parse('\newcommand{\newcom}[1][]{#1#2}') }.to raise_parse_error("Parameter \# too large.", '\newcommand{\newcom}[1][]{#1#', '2}')
-    expect { @m.parse('\newenvironment{newenv}[1][test') }.to raise_parse_error('Option not closed.', '\newenvironment{newenv}[1]', '[test')
-    expect { @m.parse('\newenvironment{newenv}[1][test') }.to raise_parse_error('Option not closed.', '\newenvironment{newenv}[1]', '[test')
+    expect do
+      @m.parse('\newcommand{\newcom}[test')
+    end.to raise_parse_error('Option not closed.', '\newcommand{\newcom}', '[test')
+    expect do
+      @m.parse('\newcommand{\newcom}[1][test')
+    end.to raise_parse_error('Option not closed.', '\newcommand{\newcom}[1]',
+                             '[test')
+    expect do
+      @m.parse('\newcommand{\newcom}[1][]{#1#2}')
+    end.to raise_parse_error("Parameter \# too large.",
+                             '\newcommand{\newcom}[1][]{#1#', '2}')
+    expect do
+      @m.parse('\newenvironment{newenv}[1][test')
+    end.to raise_parse_error('Option not closed.', '\newenvironment{newenv}[1]',
+                             '[test')
+    expect do
+      @m.parse('\newenvironment{newenv}[1][test')
+    end.to raise_parse_error('Option not closed.', '\newenvironment{newenv}[1]',
+                             '[test')
 
     expect { @m.parse('\newcommand{\newcom') }.to raise_parse_error('Block not closed.', '\newcommand', '{\newcom')
-    expect { @m.parse('\newcommand{\newcom}{test1{test2}{test3') }.to raise_parse_error('Block not closed.', '\newcommand{\newcom}', '{test1{test2}{test3')
+    expect do
+      @m.parse('\newcommand{\newcom}{test1{test2}{test3')
+    end.to raise_parse_error('Block not closed.',
+                             '\newcommand{\newcom}', '{test1{test2}{test3')
 
-    expect { @m.parse('\newenvironment{newenv}[1][]{#1 #2}') }.to raise_parse_error("Parameter \# too large.", '\newenvironment{newenv}[1][]{#1 #', '2}')
+    expect do
+      @m.parse('\newenvironment{newenv}[1][]{#1 #2}')
+    end.to raise_parse_error("Parameter \# too large.",
+                             '\newenvironment{newenv}[1][]{#1 #', '2}')
   end
 
   it '#commands' do

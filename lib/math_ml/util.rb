@@ -153,7 +153,14 @@ module MathML::Util
       encoded = ''
 
       until s.eos?
-        if s.scan(/(.*?)(((((#{@params[:throughs]})|#{@params[:dmath_envs]})|#{@params[:math_envs]})|#{proc_re})|#{@params[:escapes]})/m)
+        if s.scan(/
+          (.*?)
+          (((((#{@params[:throughs]})|
+          #{@params[:dmath_envs]})|
+          #{@params[:math_envs]})|
+          #{proc_re})|
+          #{@params[:escapes]})
+        /mx)
           encoded << s[1]
           if s[6]
             encoded << s[6]
@@ -196,7 +203,8 @@ module MathML::Util
     end
 
     def error_to_html(e)
-      "<br />\n#{escapeXML(e.message)}<br />\n<code>#{escapeXML(e.done).gsub(/\n/, "<br />\n")}<strong>#{escapeXML(e.rest).gsub(/\n/, "<br />\n")}</strong></code><br />"
+      "<br />\n#{escapeXML(e.message)}<br />\n<code>#{escapeXML(e.done).gsub(/\n/, "<br />\n")}" \
+        "<strong>#{escapeXML(e.rest).gsub(/\n/, "<br />\n")}</strong></code><br />"
     end
 
     def latex_parser

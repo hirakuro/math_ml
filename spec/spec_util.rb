@@ -2,26 +2,19 @@ require 'rspec'
 module MathML
   module Spec
     module Util
-      def raise_parse_error(message, done, rest)
-        begin
-          matcher_class = RSpec::Matchers::DSL::Matcher
-        rescue NameError
-          matcher_class = RSpec::Matchers::Matcher
-        end
-        matcher_class.new(:raise_parse_error) do
-          supports_block_expectations
+      RSpec::Matchers.define :raise_parse_error do |message, done, rest|
+        supports_block_expectations
 
-          match do |given|
-            begin
-              given.call
-              @error = nil
-            rescue Exception
-              @error = $!
-            end
-            @error.is_a?(MathML::LaTeX::ParseError) &&
-              [@error.message, @error.done, @error.rest] == [message, done, rest]
+        match do |given|
+          begin
+            given.call
+            @error = nil
+          rescue Exception
+            @error = $!
           end
-        end.for_expected
+          @error.is_a?(MathML::LaTeX::ParseError) &&
+            [@error.message, @error.done, @error.rest] == [message, done, rest]
+        end
       end
 
       def new_parser

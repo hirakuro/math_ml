@@ -5,8 +5,8 @@ source 'https://rubygems.org'
 gem 'eim_xml'
 
 group :development, :test do
-  gem 'rake', '~>10'
-  gem 'rspec', '~>3.13'
+  gem 'rake', '~> 13.2'
+  gem 'rspec', '~> 3.13'
   gem 'simplecov'
 end
 
